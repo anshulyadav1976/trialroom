@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-img-element -- tester evidence comes from dynamic run-scoped Blob URLs */
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Background,
   BackgroundVariant,
@@ -71,6 +71,15 @@ type EvidenceStudy = {
   findings: EvidenceFinding[];
   clusters: EvidenceCluster[];
 };
+
+const validViews: View[] = ["overview", "testers", "findings", "board"];
+
+function shareState(session: string, view: View) {
+  const url = new URL(window.location.href);
+  url.searchParams.set("session", session);
+  url.searchParams.set("view", view);
+  window.history.replaceState(null, "", url);
+}
 
 function runList(payload: unknown): LiveRun[] {
   if (Array.isArray(payload)) return payload as LiveRun[];
@@ -156,7 +165,9 @@ export default function Home() {
   const [selectedSessionId, setSelectedSessionId] = useState("preview");
   const [starting, setStarting] = useState(false);
   const [runError, setRunError] = useState("");
+  const [presentationStep, setPresentationStep] = useState<number | null>(null);
   const liveRunId = liveRun?.id;
+  const liveRunSeeded = liveRun?.seeded;
   const liveRunCompletedAt = liveRun?.completedAt;
   const liveTargetName = liveRun?.targetName;
   const liveTargetUrl = liveRun?.targetUrl;
@@ -177,19 +188,31 @@ export default function Home() {
       const runs = runList(payload).filter((run) => run.id !== "seeded-todomvc-preview");
       setHistory(runs);
       const featured = runs.find((run) => run.id === "seeded-saucedemo-showcase");
-      if (featured) {
+      const params = new URLSearchParams(window.location.search);
+      const requestedSession = params.get("session");
+      const requestedView = params.get("view") as View | null;
+      const initialView = requestedView && validViews.includes(requestedView) ? requestedView : "overview";
+      const requestedRun = runs.find((run) => run.id === requestedSession);
+      setView(initialView);
+      if (requestedSession === "preview") {
+        setMode("preview");
+        setSelectedSessionId("preview");
+      } else if (requestedRun ?? featured) {
+        const chosen = requestedRun ?? featured!;
         setMode("live");
-        setLiveRun(featured);
-        setSelectedSessionId(featured.id);
-        setTargetUrl(featured.targetUrl);
+        setLiveRun(chosen);
+        setSelectedSessionId(chosen.id);
+        setTargetUrl(chosen.targetUrl);
+        setRepository(chosen.repository ?? "");
+        shareState(chosen.id, initialView);
       }
     }).catch(() => { /* Preview remains available when persistence is offline. */ });
     return () => { active = false; };
   }, []);
 
   useEffect(() => {
-    if (!liveRun?.id) return;
-    const stream = new EventSource(`/api/runs/${liveRun.id}/events`);
+    if (!liveRunId || liveRunSeeded || liveRunId === "seeded-saucedemo-showcase") return;
+    const stream = new EventSource(`/api/runs/${liveRunId}/events`);
     const updateSnapshot = (event: MessageEvent<string>) => {
       try { setLiveRun(JSON.parse(event.data) as LiveRun); } catch { /* Ignore malformed transient frames. */ }
     };
@@ -210,7 +233,7 @@ export default function Home() {
     stream.addEventListener("run.snapshot", updateSnapshot as EventListener);
     stream.addEventListener("tester.updated", updateTester as EventListener);
     return () => stream.close();
-  }, [liveRun?.id]);
+  }, [liveRunId, liveRunSeeded]);
 
   useEffect(() => {
     if (!liveRunId || !liveTargetName || !liveTargetUrl) return;
@@ -229,6 +252,8 @@ export default function Home() {
     setSelectedSessionId("preview");
     setPhase(1);
     setView("testers");
+    setPresentationStep(null);
+    shareState("preview", "testers");
   }
 
   function newStudy() {
@@ -239,6 +264,8 @@ export default function Home() {
     setRunError("");
     setPhase(0);
     setView("overview");
+    setPresentationStep(null);
+    shareState("new", "overview");
   }
 
   function openPreview() {
@@ -251,6 +278,8 @@ export default function Home() {
     setTargetUrl("https://demo.playwright.dev/todomvc/");
     setRepository("");
     setView("overview");
+    setPresentationStep(null);
+    shareState("preview", "overview");
   }
 
   function openSession(run: LiveRun) {
@@ -262,6 +291,8 @@ export default function Home() {
     setTargetUrl(run.targetUrl);
     setRepository(run.repository ?? "");
     setView("overview");
+    setPresentationStep(null);
+    shareState(run.id, "overview");
   }
 
   async function runLive() {
@@ -281,6 +312,7 @@ export default function Home() {
       setSelectedSessionId(next.id);
       setHistory((runs) => [next, ...runs.filter((run) => run.id !== next.id)]);
       setView("testers");
+      shareState(next.id, "testers");
     } catch (error) {
       setRunError(error instanceof Error ? error.message : "The live study could not start");
     } finally {
@@ -298,25 +330,47 @@ export default function Home() {
   const activeFinding = findings.find((finding) => finding.id === selectedFinding) ?? findings[0];
   const featuredEvidence = liveRun?.seeded || liveRun?.id === "seeded-saucedemo-showcase";
 
+  function changeView(next: View) {
+    setView(next);
+    shareState(selectedSessionId, next);
+  }
+
+  function startPresentation() {
+    setPresentationStep(0);
+    changeView("overview");
+  }
+
+  function advancePresentation() {
+    if (presentationStep === null) return;
+    if (presentationStep >= 2) {
+      setPresentationStep(null);
+      return;
+    }
+    const next = presentationStep + 1;
+    setPresentationStep(next);
+    changeView(next === 1 ? "findings" : "board");
+  }
+
   return <main className="app-shell">
     <aside className="sidebar">
       <div className="brand"><span className="brand-mark">TR</span><span>TrialRoom<small>Research workspace</small></span></div>
       <nav aria-label="Study views">{([
         ["overview", "grid", "Overview"], ["testers", "users", "Live testers"], ["findings", "flag", "Findings"], ["board", "board", "Journey board"],
-      ] as const).map(([id, icon, label]) => <button key={id} className={view === id ? "active" : ""} onClick={() => setView(id)}><Icon name={icon}/>{label}{id === "findings" && <span className="nav-count">{mode === "live" && results ? Math.max(results.clusters.length, results.findings.length) : 3}</span>}</button>)}</nav>
+      ] as const).map(([id, icon, label]) => <button key={id} className={view === id ? "active" : ""} onClick={() => { setPresentationStep(null); changeView(id); }}><Icon name={icon}/>{label}{id === "findings" && <span className="nav-count">{mode === "live" && results ? Math.max(results.clusters.length, results.findings.length) : 3}</span>}</button>)}</nav>
       <section className="sessions"><div className="sessions-title"><span className="eyebrow">Past sessions</span><button onClick={newStudy}>New study</button></div>{history.slice(0, 3).map((run) => <button className={`session-row ${selectedSessionId === run.id ? "selected" : ""}`} key={run.id} onClick={() => openSession(run)}><i className={`session-swatch ${run.completedAt ? "complete" : "live"}`}/><span><strong>{run.targetName}</strong><small>{run.seeded || run.id === "seeded-saucedemo-showcase" ? "Featured evidence" : run.completedAt ? "Completed" : "Live or partial"} · {new Date(run.startedAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</small></span></button>)}<button className={`session-row ${selectedSessionId === "preview" ? "selected" : ""}`} onClick={openPreview}><i className="session-swatch preview"/><span><strong>TodoMVC product pass</strong><small>Seeded preview · Complete</small></span></button></section>
       <div className="sidebar-study"><span className="eyebrow">Current study</span><strong>{targetName} product pass</strong><span><i className={running ? "status-dot live" : "status-dot"}/>{studyStatus}</span></div>
       <div className="sidebar-foot"><span className="status-dot live"/>{liveRun ? Math.max(0, 4 - liveRun.activeSandboxCount) : 4} sandbox slots available</div>
     </aside>
 
     <section className="workspace">
-      <header className="topbar"><div><span className="eyebrow">Synthetic product study · {mode === "preview" ? "Preview data" : featuredEvidence ? "Seeded evidence" : "Live Sparkles"}</span><h1>{view === "overview" ? "The room at a glance" : view === "testers" ? "Four perspectives, live" : view === "findings" ? "Evidence worth acting on" : "Every journey, in context"}</h1></div><button className="run-button" onClick={mode === "preview" ? runDemo : featuredEvidence ? newStudy : runLive} disabled={running}><Icon name="play"/>{mode === "preview" ? previewRunning ? `Running · ${phase}/5` : phase === 6 ? "Run preview again" : "Run preview" : featuredEvidence ? "Start new study" : starting ? "Starting four rooms" : liveRunning ? "Study running" : liveRun ? "Run live again" : "Run live study"}<span><Icon name="arrow"/></span></button></header>
+      <header className="topbar"><div><span className="eyebrow">Synthetic product study · {mode === "preview" ? "Preview data" : featuredEvidence ? "Seeded evidence" : "Live Sparkles"}</span><h1>{view === "overview" ? "The room at a glance" : view === "testers" ? "Four perspectives, live" : view === "findings" ? "Evidence worth acting on" : "Every journey, in context"}</h1></div><div className="topbar-actions">{featuredEvidence && liveRun?.completedAt && <button className="present-button" onClick={startPresentation} disabled={!results}><Icon name="play"/>{results ? "Present study" : "Loading evidence"}</button>}<button className="run-button" onClick={mode === "preview" ? runDemo : featuredEvidence ? newStudy : runLive} disabled={running}><Icon name="play"/>{mode === "preview" ? previewRunning ? `Running · ${phase}/5` : phase === 6 ? "Run preview again" : "Run preview" : featuredEvidence ? "Start new study" : starting ? "Starting four rooms" : liveRunning ? "Study running" : liveRun ? "Run live again" : "Run live study"}<span><Icon name="arrow"/></span></button></div></header>
+      {presentationStep !== null && <section className="presentation-rail" aria-label="Captured evidence presentation"><div><span className="eyebrow">Captured evidence presentation · {presentationStep + 1} / 3</span><strong>{presentationStep === 0 ? "Begin with the study readout" : presentationStep === 1 ? "Inspect the keyboard blocker" : "See the blocked cart moment in context"}</strong><small>Replaying a completed SauceDemo study. No new testing is running.</small></div><div className="presentation-progress" aria-hidden="true">{[0, 1, 2].map((step) => <i className={step <= presentationStep ? "active" : ""} key={step}/>)}</div><button className="presentation-close" onClick={() => setPresentationStep(null)}>Close</button><button className="presentation-next" onClick={advancePresentation}>{presentationStep === 2 ? "Finish" : "Next"}<Icon name="arrow"/></button></section>}
       <section className="run-strip" aria-label="Study target"><label><span>Product URL</span><input type="url" value={targetUrl} onChange={(event) => setTargetUrl(event.target.value)} disabled={running}/></label><label><span>Source repository <i>optional</i></span><input value={repository} onChange={(event) => setRepository(event.target.value)} placeholder="owner/repository" disabled={running}/></label><div className="run-mode" aria-label="Study mode"><button className={mode === "preview" ? "selected" : ""} onClick={() => { setMode("preview"); setRunError(""); }}>Preview</button><button className={mode === "live" ? "selected" : ""} onClick={() => { setMode("live"); setRunError(""); }}>Live</button></div></section>
       {runError && <div className="run-error" role="alert"><span><b>Live study did not start.</b>{runError}. Choose Preview to explore the full study.</span><button onClick={() => { setMode("preview"); setRunError(""); }}>Use preview</button></div>}
       {view === "overview" && (mode === "live" ? <LiveOverview run={liveRun} study={results}/> : <Overview phase={phase}/>)}
       {view === "testers" && <LiveTesters phase={phase} run={mode === "live" ? liveRun : null} study={mode === "live" ? results : null}/>}
-      {view === "findings" && (mode === "live" ? results ? <LiveFindings study={results}/> : <LiveEvidencePending kind="findings" run={liveRun}/> : <Findings active={activeFinding} select={setSelectedFinding}/>)}
-      {view === "board" && (mode === "live" ? results ? <JourneyBoard study={results}/> : <LiveEvidencePending kind="board" run={liveRun}/> : <JourneyBoard/>)}
+      {view === "findings" && (mode === "live" ? results ? <LiveFindings study={results} focusFindingId={presentationStep === 1 ? "keyboard-cart-unreachable" : undefined}/> : <LiveEvidencePending kind="findings" run={liveRun}/> : <Findings active={activeFinding} select={setSelectedFinding}/>)}
+      {view === "board" && (mode === "live" ? results ? <JourneyBoard key={presentationStep === 2 ? "presenting" : "standard"} study={results} spotlightNodeId={presentationStep === 2 ? "keyboard-cart" : undefined}/> : <LiveEvidencePending kind="board" run={liveRun}/> : <JourneyBoard/>)}
     </section>
   </main>;
 }
@@ -384,14 +438,16 @@ function Findings({ active, select }: { active: (typeof findings)[number]; selec
   return <div className="view findings-view"><div className="filterbar"><span>{visibleFindings.length} of {findings.length} evidence-backed findings</span>{findingCategories.map((item) => <button key={item} className={category === item ? "selected" : ""} aria-pressed={category === item} onClick={() => filterBy(item)}>{item}</button>)}</div><div className="findings-layout"><section className="findings-list">{visibleFindings.length ? visibleFindings.map((finding) => <button key={finding.id} className={active.id === finding.id ? "finding-row active" : "finding-row"} onClick={() => select(finding.id)}><span className={`finding-index ${finding.severity.toLowerCase()}`}>{String(findings.indexOf(finding) + 1).padStart(2, "0")}</span><span><small>{finding.category} · {finding.severity} · {finding.count} tester{finding.count > 1 ? "s" : ""}</small><strong>{finding.title}</strong><p>{finding.detail}</p><em>{finding.evidence}</em></span><Icon name="arrow"/></button>) : <div className="findings-empty"><strong>No {category.toLowerCase()} findings</strong><p>Nothing in this study matches the selected category.</p><button onClick={() => filterBy("All")}>Clear filter</button></div>}</section>{visibleFindings.length > 0 && <aside className="finding-detail"><div className="detail-top"><span className={`severity ${active.severity.toLowerCase()}`}>{active.severity.slice(0, 1)}</span><span><small>{active.severity} severity</small><strong>{active.count} / 4 testers</strong></span></div><h2>{active.title}</h2><p>{active.detail}</p><div className="detail-shot"><MiniShot step={active.step} tint={active.persona === "impatient" ? "coral" : active.persona === "keyboard" ? "green" : "blue"} persona={evidencePersona.asset}/><button aria-label="Observation one">1</button>{active.count > 1 && <button aria-label="Observation two">2</button>}</div><span className="eyebrow">Browser evidence</span><div className="evidence-note"><b>Action</b><span>{active.action}</span><b>Result</b><span>{active.result}</span><b>Elapsed</b><span>{active.elapsed}</span></div><span className="eyebrow">Reproduce</span><ol>{active.reproduce.map((step) => <li key={step}>{step}</li>)}</ol></aside>}</div></div>;
 }
 
-function LiveFindings({ study }: { study: EvidenceStudy }) {
+function LiveFindings({ study, focusFindingId }: { study: EvidenceStudy; focusFindingId?: string }) {
   const rows = study.clusters.length ? study.clusters.map((cluster) => {
     const members = study.findings.filter((finding) => cluster.findingIds.includes(finding.id));
-    return { id: cluster.id, title: cluster.title, detail: cluster.summary, severity: cluster.severity, category: members[0]?.category ?? "uncategorized", count: cluster.affectedCount, finding: members[0] };
-  }) : study.findings.map((finding) => ({ id: finding.id, title: finding.observation.summary, detail: finding.observation.actual, severity: finding.severity, category: finding.category, count: 1, finding }));
+    const representative = members.find((finding) => finding.id === focusFindingId) ?? members[0];
+    return { id: cluster.id, findingIds: cluster.findingIds, title: cluster.title, detail: cluster.summary, severity: cluster.severity, category: representative?.category ?? "uncategorized", count: cluster.affectedCount, finding: representative };
+  }) : study.findings.map((finding) => ({ id: finding.id, findingIds: [finding.id], title: finding.observation.summary, detail: finding.observation.actual, severity: finding.severity, category: finding.category, count: 1, finding }));
   const categories = ["All", ...new Set(rows.map((row) => row.category))];
-  const [category, setCategory] = useState("All");
-  const [selected, setSelected] = useState(rows[0]?.id ?? "");
+  const focused = rows.find((row) => row.findingIds.includes(focusFindingId ?? ""));
+  const [category, setCategory] = useState(focused?.category ?? "All");
+  const [selected, setSelected] = useState(focused?.id ?? rows[0]?.id ?? "");
   const visibleRows = category === "All" ? rows : rows.filter((row) => row.category === category);
   const active = visibleRows.find((row) => row.id === selected) ?? visibleRows[0];
   const evidence = active?.finding?.evidence[0];
@@ -411,6 +467,8 @@ type MomentData = {
   outcome?: string;
   observationCount?: number;
   observation?: string;
+  evidence?: string;
+  reproduction?: string[];
   personaName?: string;
   personaIndex: number;
   stepIndex: number;
@@ -486,10 +544,11 @@ const boardEdges: Edge[] = personas.flatMap((persona) => journey.slice(1).map((_
 const nodeTypes = { lane: PersonaLane, moment: MomentCard };
 const edgeTypes = { journey: JourneyEdge };
 
-function JourneyBoard({ study }: { study?: EvidenceStudy }) {
+function JourneyBoard({ study, spotlightNodeId }: { study?: EvidenceStudy; spotlightNodeId?: string }) {
   const [flow, setFlow] = useState<ReactFlowInstance<BoardNode, Edge> | null>(null);
   const [zoom, setZoom] = useState(.82);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(spotlightNodeId ?? null);
+  const closeButton = useRef<HTMLButtonElement>(null);
   const liveBoard = useMemo(() => {
     if (!study) return null;
     const nodes: BoardNode[] = study.testers.slice(0, 4).flatMap((tester, row) => {
@@ -497,7 +556,8 @@ function JourneyBoard({ study }: { study?: EvidenceStudy }) {
       return [{ id: `lane-${tester.id}`, type: "lane", position: { x: 18, y: row * 178 + 12 }, data: { persona, moments: tester.journey.length }, draggable: false, selectable: false, focusable: false, zIndex: 0 } as LaneNode,
         ...tester.journey.map((step, col) => {
           const finding = study.findings.find((item) => item.testerId === tester.id && item.stepId === step.id);
-          return { id: `${tester.id}-${step.id}`, type: "moment" as const, position: { x: 235 + col * 233, y: row * 178 + 35 }, data: { title: step.title, stepIndex: col, personaIndex: row, personaName: persona.name, tint: tintNames[row], friction: step.outcome === "friction" || step.outcome === "fail", live: true, screenshotUrl: step.screenshot?.url, outcome: step.outcome, observationCount: step.observationCount, observation: finding?.observation.actual }, draggable: false, zIndex: 2 } as MomentNode;
+          const browserEvidence = finding?.evidence[0];
+          return { id: `${tester.id}-${step.id}`, type: "moment" as const, position: { x: 235 + col * 233, y: row * 178 + 35 }, data: { title: step.title, stepIndex: col, personaIndex: row, personaName: persona.name, tint: tintNames[row], friction: step.outcome === "friction" || step.outcome === "fail", live: true, screenshotUrl: step.screenshot?.url, outcome: step.outcome, observationCount: step.observationCount, observation: finding?.observation.actual, reproduction: finding?.reproduction, evidence: browserEvidence?.attemptedAction ? `${browserEvidence.attemptedAction} · ${browserEvidence.pageUrl}` : browserEvidence?.pageUrl }, draggable: false, zIndex: 2 } as MomentNode;
         })];
     });
     const edges: Edge[] = study.testers.slice(0, 4).flatMap((tester) => tester.journey.slice(1).map((step, index) => ({ id: `${tester.id}-edge-${index}`, source: `${tester.id}-${tester.journey[index].id}`, target: `${tester.id}-${step.id}`, type: "journey", zIndex: 1 })));
@@ -509,6 +569,16 @@ function JourneyBoard({ study }: { study?: EvidenceStudy }) {
   const renderedNodes = activeNodes.map((node) => node.type === "moment" ? { ...node, selected: node.id === selectedId } : node);
   const observationTotal = study?.testers.reduce((total, tester) => total + tester.journey.reduce((sum, step) => sum + step.observationCount, 0), 0) ?? 5;
   const momentTotal = study?.testers.reduce((total, tester) => total + tester.journey.length, 0) ?? 20;
+
+  useEffect(() => {
+    if (!selected) return;
+    closeButton.current?.focus();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSelectedId(null);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [selected]);
 
   return <div className="view board-view">
     <div className="board-toolbar"><span><b>{study?.targetName ?? "TodoMVC"} study</b><small>{study?.testers.length ?? 4} journeys · {momentTotal} moments · {observationTotal} observations</small></span><div className="board-controls">
@@ -539,6 +609,6 @@ function JourneyBoard({ study }: { study?: EvidenceStudy }) {
         <Background variant={BackgroundVariant.Dots} gap={22} size={1.2} color="#b8c0b8"/>
       </ReactFlow>
     </div>
-    {selected && <aside className="node-inspector"><button className="close" onClick={() => setSelectedId(null)} aria-label="Close detail">×</button><span className="eyebrow">Journey moment</span><h2>{selected.data.title}</h2><p>{selected.data.personaName ?? personas[selected.data.personaIndex].name}</p>{selected.data.live ? selected.data.screenshotUrl ? <img className="inspector-image" src={selected.data.screenshotUrl} alt={`Captured ${selected.data.title} step`}/> : <div className="inspector-image missing">No screenshot returned</div> : <MiniShot step={selected.data.stepIndex} tint={selected.data.tint} persona={personas[selected.data.personaIndex].asset}/>}<div><b>{selected.data.live ? selected.data.outcome ?? "Step recorded" : selected.data.friction ? "Evidence-backed friction" : "Step completed"}</b><p>{selected.data.live ? selected.data.observation ?? `${selected.data.observationCount ?? 0} observations attached to this moment.` : selected.data.observation ?? "The tester moved through this step without observable friction."}</p></div></aside>}
+    {selected && <div className="spotlight-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) setSelectedId(null); }}><aside className="moment-spotlight" role="dialog" aria-modal="true" aria-labelledby="moment-spotlight-title"><button ref={closeButton} className="close" onClick={() => setSelectedId(null)} aria-label="Close screenshot spotlight">×</button><div className="spotlight-visual">{selected.data.live ? selected.data.screenshotUrl ? <img src={selected.data.screenshotUrl} alt={`Captured ${selected.data.title} step`}/> : <div className="missing">No screenshot returned</div> : <MiniShot step={selected.data.stepIndex} tint={selected.data.tint} persona={personas[selected.data.personaIndex].asset}/>}</div><div className="spotlight-copy"><span className="eyebrow">Captured journey moment</span><h2 id="moment-spotlight-title">{selected.data.title}</h2><p className="spotlight-persona">{selected.data.personaName ?? personas[selected.data.personaIndex].name} · <b>{selected.data.live ? selected.data.outcome ?? "recorded" : selected.data.friction ? "friction" : "passed"}</b></p><span className="eyebrow">Observation</span><p>{selected.data.live ? selected.data.observation ?? `${selected.data.observationCount ?? 0} observations attached to this moment.` : selected.data.observation ?? "The tester moved through this step without observable friction."}</p>{selected.data.evidence && <><span className="eyebrow">Browser evidence</span><p className="spotlight-evidence">{selected.data.evidence}</p></>}{selected.data.reproduction?.length ? <><span className="eyebrow">Reproduce</span><ol>{selected.data.reproduction.map((step) => <li key={step}>{step}</li>)}</ol></> : null}</div></aside></div>}
   </div>;
 }
