@@ -203,7 +203,7 @@ export default function Home() {
         setLiveRun(chosen);
         setSelectedSessionId(chosen.id);
         setTargetUrl(chosen.targetUrl);
-        setRepository(chosen.repository ?? "");
+        setRepository(chosen.repository ?? (chosen.id === "seeded-saucedemo-showcase" ? "saucelabs/sample-app-web" : ""));
         shareState(chosen.id, initialView);
       }
     }).catch(() => { /* Preview remains available when persistence is offline. */ });
@@ -289,7 +289,7 @@ export default function Home() {
     setSelectedSessionId(run.id);
     setRunError("");
     setTargetUrl(run.targetUrl);
-    setRepository(run.repository ?? "");
+    setRepository(run.repository ?? (run.id === "seeded-saucedemo-showcase" ? "saucelabs/sample-app-web" : ""));
     setView("overview");
     setPresentationStep(null);
     shareState(run.id, "overview");
@@ -369,7 +369,7 @@ export default function Home() {
       {runError && <div className="run-error" role="alert"><span><b>Live study did not start.</b>{runError}. Choose Preview to explore the full study.</span><button onClick={() => { setMode("preview"); setRunError(""); }}>Use preview</button></div>}
       {view === "overview" && (mode === "live" ? <LiveOverview run={liveRun} study={results}/> : <Overview phase={phase}/>)}
       {view === "testers" && <LiveTesters phase={phase} run={mode === "live" ? liveRun : null} study={mode === "live" ? results : null}/>}
-      {view === "findings" && (mode === "live" ? results ? <LiveFindings study={results} focusFindingId={presentationStep === 1 ? "keyboard-cart-unreachable" : undefined}/> : <LiveEvidencePending kind="findings" run={liveRun}/> : <Findings active={activeFinding} select={setSelectedFinding}/>)}
+      {view === "findings" && (mode === "live" ? results ? <LiveFindings study={results} repository={repository || (featuredEvidence ? "saucelabs/sample-app-web" : "")} targetUrl={targetUrl} focusFindingId={presentationStep === 1 ? "keyboard-cart-unreachable" : undefined}/> : <LiveEvidencePending kind="findings" run={liveRun}/> : <Findings active={activeFinding} select={setSelectedFinding}/>)}
       {view === "board" && (mode === "live" ? results ? <JourneyBoard key={presentationStep === 2 ? "presenting" : "standard"} study={results} spotlightNodeId={presentationStep === 2 ? "keyboard-cart" : undefined}/> : <LiveEvidencePending kind="board" run={liveRun}/> : <JourneyBoard/>)}
     </section>
   </main>;
@@ -438,7 +438,7 @@ function Findings({ active, select }: { active: (typeof findings)[number]; selec
   return <div className="view findings-view"><div className="filterbar"><span>{visibleFindings.length} of {findings.length} evidence-backed findings</span>{findingCategories.map((item) => <button key={item} className={category === item ? "selected" : ""} aria-pressed={category === item} onClick={() => filterBy(item)}>{item}</button>)}</div><div className="findings-layout"><section className="findings-list">{visibleFindings.length ? visibleFindings.map((finding) => <button key={finding.id} className={active.id === finding.id ? "finding-row active" : "finding-row"} onClick={() => select(finding.id)}><span className={`finding-index ${finding.severity.toLowerCase()}`}>{String(findings.indexOf(finding) + 1).padStart(2, "0")}</span><span><small>{finding.category} · {finding.severity} · {finding.count} tester{finding.count > 1 ? "s" : ""}</small><strong>{finding.title}</strong><p>{finding.detail}</p><em>{finding.evidence}</em></span><Icon name="arrow"/></button>) : <div className="findings-empty"><strong>No {category.toLowerCase()} findings</strong><p>Nothing in this study matches the selected category.</p><button onClick={() => filterBy("All")}>Clear filter</button></div>}</section>{visibleFindings.length > 0 && <aside className="finding-detail"><div className="detail-top"><span className={`severity ${active.severity.toLowerCase()}`}>{active.severity.slice(0, 1)}</span><span><small>{active.severity} severity</small><strong>{active.count} / 4 testers</strong></span></div><h2>{active.title}</h2><p>{active.detail}</p><div className="detail-shot"><MiniShot step={active.step} tint={active.persona === "impatient" ? "coral" : active.persona === "keyboard" ? "green" : "blue"} persona={evidencePersona.asset}/><button aria-label="Observation one">1</button>{active.count > 1 && <button aria-label="Observation two">2</button>}</div><span className="eyebrow">Browser evidence</span><div className="evidence-note"><b>Action</b><span>{active.action}</span><b>Result</b><span>{active.result}</span><b>Elapsed</b><span>{active.elapsed}</span></div><span className="eyebrow">Reproduce</span><ol>{active.reproduce.map((step) => <li key={step}>{step}</li>)}</ol></aside>}</div></div>;
 }
 
-function LiveFindings({ study, focusFindingId }: { study: EvidenceStudy; focusFindingId?: string }) {
+function LiveFindings({ study, repository, targetUrl, focusFindingId }: { study: EvidenceStudy; repository: string; targetUrl: string; focusFindingId?: string }) {
   const rows = study.clusters.length ? study.clusters.map((cluster) => {
     const members = study.findings.filter((finding) => cluster.findingIds.includes(finding.id));
     const representative = members.find((finding) => finding.id === focusFindingId) ?? members[0];
@@ -448,6 +448,7 @@ function LiveFindings({ study, focusFindingId }: { study: EvidenceStudy; focusFi
   const focused = rows.find((row) => row.findingIds.includes(focusFindingId ?? ""));
   const [category, setCategory] = useState(focused?.category ?? "All");
   const [selected, setSelected] = useState(focused?.id ?? rows[0]?.id ?? "");
+  const [fixRequest, setFixRequest] = useState<{ findingId: string; state: "opening" | "launched" | "error"; sandboxId?: string; message?: string } | null>(null);
   const visibleRows = category === "All" ? rows : rows.filter((row) => row.category === category);
   const active = visibleRows.find((row) => row.id === selected) ?? visibleRows[0];
   const evidence = active?.finding?.evidence[0];
@@ -456,8 +457,26 @@ function LiveFindings({ study, focusFindingId }: { study: EvidenceStudy; focusFi
     const first = next === "All" ? rows[0] : rows.find((row) => row.category === next);
     if (first) setSelected(first.id);
   }
+  async function launchFix() {
+    if (!active?.finding || !repository || fixRequest?.state === "opening" || (fixRequest?.findingId === active.finding.id && fixRequest.state === "launched")) return;
+    const finding = active.finding;
+    setFixRequest({ findingId: finding.id, state: "opening" });
+    try {
+      const response = await fetch("/api/fixes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ repository, targetUrl, finding: { id: finding.id, title: active.title, severity: finding.severity, category: finding.category, observation: finding.observation, reproduction: finding.reproduction } }),
+      });
+      const body = await response.json() as { sandboxId?: string; error?: string };
+      if (!response.ok || !body.sandboxId) throw new Error(body.error || "The fix room could not be opened");
+      setFixRequest({ findingId: finding.id, state: "launched", sandboxId: body.sandboxId });
+    } catch (error) {
+      setFixRequest({ findingId: finding.id, state: "error", message: error instanceof Error ? error.message : "The fix room could not be opened" });
+    }
+  }
   if (!rows.length) return <div className="view live-evidence-empty"><span className="eyebrow">Live findings</span><strong>No friction was returned</strong><p>The completed tester results contain no findings, so TrialRoom is not inventing any.</p></div>;
-  return <div className="view findings-view"><div className="filterbar"><span>{visibleRows.length} of {rows.length} evidence-backed findings</span>{categories.map((item) => <button key={item} className={category === item ? "selected" : ""} aria-pressed={category === item} onClick={() => filterBy(item)}>{item === "All" ? item : item.replace(/(^|-)([a-z])/g, (_, separator, letter: string) => `${separator}${letter.toUpperCase()}`)}</button>)}</div><div className="findings-layout"><section className="findings-list">{visibleRows.length ? visibleRows.map((row) => <button key={row.id} className={active?.id === row.id ? "finding-row active" : "finding-row"} onClick={() => setSelected(row.id)}><span className={`finding-index ${row.severity.toLowerCase()}`}>{String(rows.indexOf(row) + 1).padStart(2, "0")}</span><span><small>{row.category} · {row.severity} · {row.count} tester{row.count === 1 ? "" : "s"}</small><strong>{row.title}</strong><p>{row.detail}</p><em>{row.finding ? `${row.finding.route} · ${row.finding.stepId}` : "Clustered tester evidence"}</em></span><Icon name="arrow"/></button>) : <div className="findings-empty"><strong>No {category} findings</strong><p>Nothing in this study matches the selected category.</p><button onClick={() => filterBy("All")}>Clear filter</button></div>}</section>{active && <aside className="finding-detail"><div className="detail-top"><span className={`severity ${active.severity.toLowerCase()}`}>{active.severity.slice(0, 1).toUpperCase()}</span><span><small>{active.severity} severity</small><strong>{active.count} / {study.testers.length} testers</strong></span></div><h2>{active.title}</h2><p>{active.detail}</p><div className="detail-shot live-detail-shot">{evidence?.screenshot?.url ? <img src={evidence.screenshot.url} alt={evidence.screenshot.label || `Evidence for ${active.title}`}/> : <span>No screenshot URL returned</span>}</div>{active.finding && <><span className="eyebrow">Browser evidence</span><div className="evidence-note"><b>Page</b><span>{evidence?.pageUrl ?? active.finding.route}</span><b>Action</b><span>{evidence?.attemptedAction ?? "Not recorded"}</span><b>Observed</b><span>{active.finding.observation.actual}</span></div><span className="eyebrow">Reproduce</span><ol>{active.finding.reproduction.map((step) => <li key={step}>{step}</li>)}</ol></>}</aside>}</div></div>;
+  const activeFix = active?.finding && fixRequest?.findingId === active.finding.id ? fixRequest : null;
+  return <div className="view findings-view"><div className="filterbar"><span>{visibleRows.length} of {rows.length} evidence-backed findings</span>{categories.map((item) => <button key={item} className={category === item ? "selected" : ""} aria-pressed={category === item} onClick={() => filterBy(item)}>{item === "All" ? item : item.replace(/(^|-)([a-z])/g, (_, separator, letter: string) => `${separator}${letter.toUpperCase()}`)}</button>)}</div><div className="findings-layout"><section className="findings-list">{visibleRows.length ? visibleRows.map((row) => <button key={row.id} className={active?.id === row.id ? "finding-row active" : "finding-row"} onClick={() => setSelected(row.id)}><span className={`finding-index ${row.severity.toLowerCase()}`}>{String(rows.indexOf(row) + 1).padStart(2, "0")}</span><span><small>{row.category} · {row.severity} · {row.count} tester{row.count === 1 ? "" : "s"}</small><strong>{row.title}</strong><p>{row.detail}</p><em>{row.finding ? `${row.finding.route} · ${row.finding.stepId}` : "Clustered tester evidence"}</em></span><Icon name="arrow"/></button>) : <div className="findings-empty"><strong>No {category} findings</strong><p>Nothing in this study matches the selected category.</p><button onClick={() => filterBy("All")}>Clear filter</button></div>}</section>{active && <aside className="finding-detail"><div className="detail-top"><span className={`severity ${active.severity.toLowerCase()}`}>{active.severity.slice(0, 1).toUpperCase()}</span><span><small>{active.severity} severity</small><strong>{active.count} / {study.testers.length} testers</strong></span></div><h2>{active.title}</h2><p>{active.detail}</p><div className="detail-shot live-detail-shot">{evidence?.screenshot?.url ? <img src={evidence.screenshot.url} alt={evidence.screenshot.label || `Evidence for ${active.title}`}/> : <span>No screenshot URL returned</span>}</div>{active.finding && <><span className="eyebrow">Browser evidence</span><div className="evidence-note"><b>Page</b><span>{evidence?.pageUrl ?? active.finding.route}</span><b>Action</b><span>{evidence?.attemptedAction ?? "Not recorded"}</span><b>Observed</b><span>{active.finding.observation.actual}</span></div><span className="eyebrow">Reproduce</span><ol>{active.finding.reproduction.map((step) => <li key={step}>{step}</li>)}</ol><div className="fix-launch"><div><span className="eyebrow">Sparkles fix room</span><p>{activeFix?.state === "launched" ? `Sandbox ${activeFix.sandboxId?.slice(0, 12)} launched with this evidence.` : activeFix?.state === "error" ? activeFix.message : repository ? `Uses ${repository}. No code or pull request is merged automatically.` : "Add a source repository above to enable a fix room."}</p></div><button onClick={launchFix} disabled={!repository || activeFix?.state === "opening" || activeFix?.state === "launched"}>{activeFix?.state === "opening" ? "Opening Sparkles room" : activeFix?.state === "launched" ? "Fix room launched" : "Fix now"}<Icon name="arrow"/></button></div></>}</aside>}</div></div>;
 }
 
 type MomentData = {
