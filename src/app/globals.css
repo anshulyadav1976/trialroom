@@ -32,7 +32,7 @@ button { cursor: pointer; }
 .sidebar nav button.active { color: #fff; background: #293c36; box-shadow: inset 2px 0 #91a8ff; }
 .sidebar nav .icon { width: 16px; height: 16px; }
 .nav-count { margin-left: auto; padding: 1px 6px; border-radius: 8px; background: #3b4e47; font-size: 10px; }
-.sessions { display: grid; gap: 3px; margin-top: 26px; padding-top: 15px; border-top: 1px solid #2a3b35; }
+.sessions { display: grid; gap: 3px; max-height: 42vh; margin-top: 26px; padding: 15px 3px 0 0; overflow-y: auto; border-top: 1px solid #2a3b35; scrollbar-color: #53665f transparent; scrollbar-width: thin; }
 .sessions-title { display: flex; align-items: center; justify-content: space-between; margin: 0 7px 7px; }
 .sessions-title .eyebrow { color: #74857e; }.sessions-title button { padding: 0; border: 0; color: #aebdb7; background: transparent; font-size: 8px; font-weight: 750; }
 .sessions-title button:hover { color: #fff; }
