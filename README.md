@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TrialRoom
 
-## Getting Started
+Autonomous synthetic product testing with four isolated Sparkles agents, real Playwright journeys, screenshot evidence, and cross-tester insight clustering.
 
-First, run the development server:
+## Local development
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Required server-side variables live in `.env.local` and must never be committed:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+SPARKLES_API_KEY
+ANTHROPIC_API_KEY
+SPARKLES_REPOSITORY
+SPARKLES_MODEL           # optional; omit to use Sparkles' managed default
+TRIALROOM_TARGET_URL
+BLOB_READ_WRITE_TOKEN
+TRIALROOM_ARTIFACT_SECRET
+TRIALROOM_PUBLIC_ORIGIN
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Verification
 
-## Learn More
+```bash
+pnpm lint
+pnpm build
+pnpm test:spike
+pnpm test:results
+node --test src/lib/sparkles/sparkles.test.mjs
+```
 
-To learn more about Next.js, take a look at the following resources:
+The real Phase-0 browser proof is intentionally explicit because it creates one paid cloud sandbox:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+pnpm spike:sparkles
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The checked-in TodoMVC study is backed by 20 real browser screenshots. To refresh its public Blob artifacts:
 
-## Deploy on Vercel
+```bash
+node scripts/seed-demo.mjs
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+TrialRoom uses one durable public-study lock and enforces a hard maximum of four active Sparkles sandboxes. Normal testing never modifies the target product or opens pull requests.

@@ -1,0 +1,160 @@
+{
+  "runId": "seeded-todomvc-preview",
+  "personaId": "keyboard",
+  "targetUrl": "https://demo.playwright.dev/todomvc/",
+  "status": "completed",
+  "steps": [
+    {
+      "id": "orient",
+      "title": "Understand the product",
+      "mission": "Identify the product purpose and primary action.",
+      "outcome": "pass",
+      "durationMs": 743,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "keyboard-orient",
+        "label": "Noor, the keyboard user · Understand the product",
+        "source": "sparkles-upload",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/keyboard/01-orient.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "enter",
+      "title": "Enter the main experience",
+      "mission": "Reach the task input and begin without invented credentials.",
+      "outcome": "pass",
+      "durationMs": 65,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "keyboard-enter",
+        "label": "Noor, the keyboard user · Enter the main experience",
+        "source": "sparkles-upload",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/keyboard/02-enter.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "primary-task",
+      "title": "Complete the primary task",
+      "mission": "Create and complete a representative task.",
+      "outcome": "friction",
+      "durationMs": 25,
+      "observationCount": 1,
+      "screenshot": {
+        "id": "keyboard-primary-task",
+        "label": "Noor, the keyboard user · Complete the primary task",
+        "source": "sparkles-upload",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/keyboard/03-primary-task.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "review",
+      "title": "Review the result",
+      "mission": "Inspect the completed state and related view.",
+      "outcome": "friction",
+      "durationMs": 17,
+      "observationCount": 1,
+      "screenshot": {
+        "id": "keyboard-review",
+        "label": "Noor, the keyboard user · Review the result",
+        "source": "sparkles-upload",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/keyboard/04-review.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "recover",
+      "title": "Recover from one mistake",
+      "mission": "Make one safe mistake and return to a useful state.",
+      "outcome": "pass",
+      "durationMs": 159,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "keyboard-recover",
+        "label": "Noor, the keyboard user · Recover from one mistake",
+        "source": "sparkles-upload",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/keyboard/05-recover.jpg",
+        "width": 960,
+        "height": 540
+      }
+    }
+  ],
+  "findings": [
+    {
+      "id": "keyboard-task-toggle-focus",
+      "testerId": "keyboard",
+      "route": "/",
+      "stepId": "primary-task",
+      "category": "accessibility",
+      "severity": "medium",
+      "observation": {
+        "summary": "The task checkbox has no visible keyboard focus indicator",
+        "expected": "The task-completion control should visibly indicate keyboard focus.",
+        "actual": "The focused checkbox was operable but reported opacity 0, outline none, and box-shadow none."
+      },
+      "evidence": [
+        {
+          "pageUrl": "https://demo.playwright.dev/todomvc/",
+          "attemptedAction": "Tabbed to the task checkbox and pressed Space.",
+          "screenshot": {
+            "id": "keyboard-primary-task",
+            "label": "Noor, the keyboard user · Complete the primary task",
+            "source": "sparkles-upload",
+            "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/keyboard/03-primary-task.jpg",
+            "width": 960,
+            "height": 540
+          },
+          "consoleErrors": [],
+          "failedRequests": [],
+          "elapsedMs": 25
+        }
+      ],
+      "reproduction": [
+        "Create a task with Enter",
+        "Tab to its checkbox",
+        "Observe focus before pressing Space"
+      ]
+    },
+    {
+      "id": "keyboard-filter-focus",
+      "testerId": "keyboard",
+      "route": "/",
+      "stepId": "review",
+      "category": "accessibility",
+      "severity": "medium",
+      "observation": {
+        "summary": "Footer filters have no visible keyboard focus indicator",
+        "expected": "The focused filter should be visually distinct before activation.",
+        "actual": "The Completed link was operable but reported no outline or box-shadow while focused."
+      },
+      "evidence": [
+        {
+          "pageUrl": "https://demo.playwright.dev/todomvc/",
+          "attemptedAction": "Tabbed to Completed and pressed Enter.",
+          "screenshot": {
+            "id": "keyboard-review",
+            "label": "Noor, the keyboard user · Review the result",
+            "source": "sparkles-upload",
+            "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/keyboard/04-review.jpg",
+            "width": 960,
+            "height": 540
+          },
+          "consoleErrors": [],
+          "failedRequests": [],
+          "elapsedMs": 17
+        }
+      ],
+      "reproduction": [
+        "Create and complete a task",
+        "Tab to the Completed filter",
+        "Observe focus before pressing Enter"
+      ]
+    }
+  ]
+}

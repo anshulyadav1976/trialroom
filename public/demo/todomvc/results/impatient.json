@@ -1,0 +1,125 @@
+{
+  "runId": "seeded-todomvc-preview",
+  "personaId": "impatient",
+  "targetUrl": "https://demo.playwright.dev/todomvc/",
+  "status": "completed",
+  "steps": [
+    {
+      "id": "orient",
+      "title": "Understand the product",
+      "mission": "Identify the product purpose and primary action.",
+      "outcome": "pass",
+      "durationMs": 736,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "impatient-orient",
+        "label": "Leo, the impatient user · Understand the product",
+        "source": "sparkles-upload",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/impatient/01-orient.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "enter",
+      "title": "Enter the main experience",
+      "mission": "Reach the task input and begin without invented credentials.",
+      "outcome": "pass",
+      "durationMs": 82,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "impatient-enter",
+        "label": "Leo, the impatient user · Enter the main experience",
+        "source": "sparkles-upload",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/impatient/02-enter.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "primary-task",
+      "title": "Complete the primary task",
+      "mission": "Create and complete a representative task.",
+      "outcome": "pass",
+      "durationMs": 18,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "impatient-primary-task",
+        "label": "Leo, the impatient user · Complete the primary task",
+        "source": "sparkles-upload",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/impatient/03-primary-task.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "review",
+      "title": "Review the result",
+      "mission": "Inspect the completed state and related view.",
+      "outcome": "pass",
+      "durationMs": 23,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "impatient-review",
+        "label": "Leo, the impatient user · Review the result",
+        "source": "sparkles-upload",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/impatient/04-review.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "recover",
+      "title": "Recover from one mistake",
+      "mission": "Make one safe mistake and return to a useful state.",
+      "outcome": "friction",
+      "durationMs": 42,
+      "observationCount": 1,
+      "screenshot": {
+        "id": "impatient-recover",
+        "label": "Leo, the impatient user · Recover from one mistake",
+        "source": "sparkles-upload",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/impatient/05-recover.jpg",
+        "width": 960,
+        "height": 540
+      }
+    }
+  ],
+  "findings": [
+    {
+      "id": "impatient-empty-submit-feedback",
+      "testerId": "impatient",
+      "route": "/",
+      "stepId": "recover",
+      "category": "feedback",
+      "severity": "low",
+      "observation": {
+        "summary": "Empty submission has no visible feedback",
+        "expected": "A quick user should understand that an empty action was intentionally ignored.",
+        "actual": "The task count stayed unchanged and no visible alert or explanation appeared."
+      },
+      "evidence": [
+        {
+          "pageUrl": "https://demo.playwright.dev/todomvc/",
+          "attemptedAction": "Pressed Enter with an empty new-task input.",
+          "screenshot": {
+            "id": "impatient-recover",
+            "label": "Leo, the impatient user · Recover from one mistake",
+            "source": "sparkles-upload",
+            "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/impatient/05-recover.jpg",
+            "width": 960,
+            "height": 540
+          },
+          "consoleErrors": [],
+          "failedRequests": [],
+          "elapsedMs": 42
+        }
+      ],
+      "reproduction": [
+        "Create one task",
+        "Focus the empty new-task input",
+        "Press Enter and observe the unchanged page"
+      ]
+    }
+  ]
+}

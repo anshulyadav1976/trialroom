@@ -1,0 +1,125 @@
+{
+  "runId": "seeded-todomvc-preview",
+  "personaId": "edge-case",
+  "targetUrl": "https://demo.playwright.dev/todomvc/",
+  "status": "completed",
+  "steps": [
+    {
+      "id": "orient",
+      "title": "Understand the product",
+      "mission": "Identify the product purpose and primary action.",
+      "outcome": "pass",
+      "durationMs": 706,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "edge-case-orient",
+        "label": "Eli, the edge-case user · Understand the product",
+        "source": "sparkles-upload",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/edge-case/01-orient.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "enter",
+      "title": "Enter the main experience",
+      "mission": "Reach the task input and begin without invented credentials.",
+      "outcome": "pass",
+      "durationMs": 294,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "edge-case-enter",
+        "label": "Eli, the edge-case user · Enter the main experience",
+        "source": "sparkles-upload",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/edge-case/02-enter.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "primary-task",
+      "title": "Complete the primary task",
+      "mission": "Create and complete a representative task.",
+      "outcome": "pass",
+      "durationMs": 70,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "edge-case-primary-task",
+        "label": "Eli, the edge-case user · Complete the primary task",
+        "source": "sparkles-upload",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/edge-case/03-primary-task.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "review",
+      "title": "Review the result",
+      "mission": "Inspect the completed state and related view.",
+      "outcome": "pass",
+      "durationMs": 249,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "edge-case-review",
+        "label": "Eli, the edge-case user · Review the result",
+        "source": "sparkles-upload",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/edge-case/04-review.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "recover",
+      "title": "Recover from one mistake",
+      "mission": "Make one safe mistake and return to a useful state.",
+      "outcome": "friction",
+      "durationMs": 568,
+      "observationCount": 1,
+      "screenshot": {
+        "id": "edge-case-recover",
+        "label": "Eli, the edge-case user · Recover from one mistake",
+        "source": "sparkles-upload",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/edge-case/05-recover.jpg",
+        "width": 960,
+        "height": 540
+      }
+    }
+  ],
+  "findings": [
+    {
+      "id": "edge-empty-feedback",
+      "testerId": "edge-case",
+      "route": "/",
+      "stepId": "recover",
+      "category": "feedback",
+      "severity": "low",
+      "observation": {
+        "summary": "Empty submission has no visible feedback",
+        "expected": "The rejected empty action should be understandable.",
+        "actual": "The task count remained zero and the page did not visibly change."
+      },
+      "evidence": [
+        {
+          "pageUrl": "https://demo.playwright.dev/todomvc/",
+          "attemptedAction": "Pressed Enter with an empty new-task input.",
+          "screenshot": {
+            "id": "edge-case-recover",
+            "label": "Eli, the edge-case user · Recover from one mistake",
+            "source": "sparkles-upload",
+            "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/edge-case/05-recover.jpg",
+            "width": 960,
+            "height": 540
+          },
+          "consoleErrors": [],
+          "failedRequests": [],
+          "elapsedMs": 294
+        }
+      ],
+      "reproduction": [
+        "Focus the new-task input",
+        "Leave it empty",
+        "Press Enter"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,125 @@
+{
+  "runId": "seeded-todomvc-preview",
+  "personaId": "first-time",
+  "targetUrl": "https://demo.playwright.dev/todomvc/",
+  "status": "completed",
+  "steps": [
+    {
+      "id": "orient",
+      "title": "Understand the product",
+      "mission": "Identify the product purpose and primary action.",
+      "outcome": "pass",
+      "durationMs": 709,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "first-time-orient",
+        "label": "Maya, the first-time user · Understand the product",
+        "source": "sparkles-upload",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/first-time/01-orient.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "enter",
+      "title": "Enter the main experience",
+      "mission": "Reach the task input and begin without invented credentials.",
+      "outcome": "pass",
+      "durationMs": 32,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "first-time-enter",
+        "label": "Maya, the first-time user · Enter the main experience",
+        "source": "sparkles-upload",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/first-time/02-enter.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "primary-task",
+      "title": "Complete the primary task",
+      "mission": "Create and complete a representative task.",
+      "outcome": "pass",
+      "durationMs": 75,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "first-time-primary-task",
+        "label": "Maya, the first-time user · Complete the primary task",
+        "source": "sparkles-upload",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/first-time/03-primary-task.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "review",
+      "title": "Review the result",
+      "mission": "Inspect the completed state and related view.",
+      "outcome": "friction",
+      "durationMs": 42,
+      "observationCount": 1,
+      "screenshot": {
+        "id": "first-time-review",
+        "label": "Maya, the first-time user · Review the result",
+        "source": "sparkles-upload",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/first-time/04-review.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "recover",
+      "title": "Recover from one mistake",
+      "mission": "Make one safe mistake and return to a useful state.",
+      "outcome": "pass",
+      "durationMs": 323,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "first-time-recover",
+        "label": "Maya, the first-time user · Recover from one mistake",
+        "source": "sparkles-upload",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/first-time/05-recover.jpg",
+        "width": 960,
+        "height": 540
+      }
+    }
+  ],
+  "findings": [
+    {
+      "id": "first-time-filter-discovery",
+      "testerId": "first-time",
+      "route": "/",
+      "stepId": "review",
+      "category": "navigation",
+      "severity": "medium",
+      "observation": {
+        "summary": "Completed-task filters are easy to miss",
+        "expected": "A first-time user should notice how to review completed work immediately after finishing a task.",
+        "actual": "The small filters sit beneath the item count and only appear after a task exists."
+      },
+      "evidence": [
+        {
+          "pageUrl": "https://demo.playwright.dev/todomvc/",
+          "attemptedAction": "Completed one of two tasks, then looked for a completed-work view.",
+          "screenshot": {
+            "id": "first-time-review",
+            "label": "Maya, the first-time user · Review the result",
+            "source": "sparkles-upload",
+            "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/first-time/04-review.jpg",
+            "width": 960,
+            "height": 540
+          },
+          "consoleErrors": [],
+          "failedRequests": [],
+          "elapsedMs": 42
+        }
+      ],
+      "reproduction": [
+        "Add two tasks",
+        "Complete one task",
+        "Look for a way to view completed work"
+      ]
+    }
+  ]
+}

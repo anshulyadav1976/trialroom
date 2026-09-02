@@ -1,0 +1,58 @@
+{
+  "runId": "seeded-todomvc-preview",
+  "title": "TodoMVC product pass",
+  "targetUrl": "https://demo.playwright.dev/todomvc/",
+  "seeded": true,
+  "testers": [
+    {
+      "personaId": "first-time",
+      "name": "Maya, the first-time user",
+      "status": "completed",
+      "resultUrl": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/first-time/trialroom-first-time.json"
+    },
+    {
+      "personaId": "impatient",
+      "name": "Leo, the impatient user",
+      "status": "completed",
+      "resultUrl": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/impatient/trialroom-impatient.json"
+    },
+    {
+      "personaId": "keyboard",
+      "name": "Noor, the keyboard user",
+      "status": "completed",
+      "resultUrl": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/keyboard/trialroom-keyboard.json"
+    },
+    {
+      "personaId": "edge-case",
+      "name": "Eli, the edge-case user",
+      "status": "completed",
+      "resultUrl": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/edge-case/trialroom-edge-case.json"
+    }
+  ],
+  "artifacts": [
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/first-time/01-orient.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/first-time/02-enter.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/first-time/03-primary-task.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/first-time/04-review.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/first-time/05-recover.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/first-time/trialroom-first-time.json",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/impatient/01-orient.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/impatient/02-enter.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/impatient/03-primary-task.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/impatient/04-review.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/impatient/05-recover.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/impatient/trialroom-impatient.json",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/keyboard/01-orient.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/keyboard/02-enter.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/keyboard/03-primary-task.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/keyboard/04-review.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/keyboard/05-recover.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/keyboard/trialroom-keyboard.json",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/edge-case/01-orient.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/edge-case/02-enter.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/edge-case/03-primary-task.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/edge-case/04-review.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/edge-case/05-recover.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-todomvc-preview/edge-case/trialroom-edge-case.json"
+  ]
+}

@@ -27,3 +27,21 @@ test("SSE parser survives chunk boundaries and reducer deduplicates durable ids"
     ["sandbox.status", "message.completed", "sandbox.status"],
   );
 });
+
+test("events sharing a cursor remain distinct and failed turns stop the run", () => {
+  const state = { seen: new Set(), events: [], lastCursor: undefined, status: "running" };
+  reduceEvent(state, {
+    id: "32",
+    event: "message.completed",
+    data: '{"id":"32","type":"message.completed","data":{}}',
+  });
+  reduceEvent(state, {
+    id: "32",
+    event: "turn.completed",
+    data: '{"id":"32","type":"turn.completed","data":{"state":"failed"}}',
+  });
+
+  assert.deepEqual(state.events.map(({ type }) => type), ["message.completed", "turn.completed"]);
+  assert.equal(state.lastCursor, "32");
+  assert.equal(state.status, "failed");
+});
