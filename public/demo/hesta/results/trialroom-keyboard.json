@@ -1,0 +1,230 @@
+{
+  "runId": "seeded-hesta-health-study",
+  "personaId": "keyboard",
+  "targetUrl": "https://www.hestahealth.com/",
+  "status": "completed",
+  "steps": [
+    {
+      "id": "orient",
+      "title": "Understand Hesta",
+      "mission": "Identify the service and its primary care action.",
+      "outcome": "friction",
+      "durationMs": 920,
+      "observationCount": 1,
+      "screenshot": {
+        "id": "keyboard-orient",
+        "label": "Noor · Understand Hesta",
+        "source": "demo-placeholder",
+        "url": "https://trialroom-sigma.vercel.app/demo/hesta/keyboard/01-orient.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "explore",
+      "title": "Explore care options",
+      "mission": "Compare available postnatal care and next steps.",
+      "outcome": "friction",
+      "durationMs": 1450,
+      "observationCount": 1,
+      "screenshot": {
+        "id": "keyboard-explore",
+        "label": "Noor · Explore care options",
+        "source": "demo-placeholder",
+        "url": "https://trialroom-sigma.vercel.app/demo/hesta/keyboard/02-explore.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "how-it-works",
+      "title": "Understand the pathway",
+      "mission": "Learn how care begins and what to expect.",
+      "outcome": "friction",
+      "durationMs": 830,
+      "observationCount": 1,
+      "screenshot": {
+        "id": "keyboard-how-it-works",
+        "label": "Noor · Understand the pathway",
+        "source": "demo-placeholder",
+        "url": "https://trialroom-sigma.vercel.app/demo/hesta/keyboard/03-how-it-works.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "support",
+      "title": "Find support",
+      "mission": "Locate trustworthy help without submitting a form.",
+      "outcome": "friction",
+      "durationMs": 1260,
+      "observationCount": 1,
+      "screenshot": {
+        "id": "keyboard-support",
+        "label": "Noor · Find support",
+        "source": "demo-placeholder",
+        "url": "https://trialroom-sigma.vercel.app/demo/hesta/keyboard/04-support.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "mobile",
+      "title": "Check the mobile entry",
+      "mission": "Revisit the entry point in a narrow viewport.",
+      "outcome": "pass",
+      "durationMs": 980,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "keyboard-mobile",
+        "label": "Noor · Check the mobile entry",
+        "source": "demo-placeholder",
+        "url": "https://trialroom-sigma.vercel.app/demo/hesta/keyboard/05-mobile.jpg",
+        "width": 390,
+        "height": 844
+      }
+    }
+  ],
+  "findings": [
+    {
+      "id": "keyboard-cookie-controls-unnamed",
+      "testerId": "keyboard",
+      "route": "/",
+      "stepId": "orient",
+      "category": "accessibility",
+      "severity": "high",
+      "observation": {
+        "summary": "Cookie preference controls are focusable but unnamed",
+        "expected": "Each cookie switch and action is announced with its purpose and state.",
+        "actual": "Functional, Analytical, and Marketing switches plus the save button had no detected accessible name."
+      },
+      "evidence": [
+        {
+          "pageUrl": "https://www.hestahealth.com/",
+          "attemptedAction": "Tabbed through the fresh-visit cookie controls and inspected each focused element.",
+          "screenshot": {
+            "id": "keyboard-orient",
+            "label": "Noor · Understand Hesta",
+            "source": "demo-placeholder",
+            "url": "https://trialroom-sigma.vercel.app/demo/hesta/keyboard/01-orient.jpg",
+            "width": 960,
+            "height": 540
+          },
+          "consoleErrors": [],
+          "failedRequests": [],
+          "elapsedMs": 920
+        }
+      ],
+      "reproduction": [
+        "Open the homepage in a fresh context",
+        "Tab through cookie preferences",
+        "Inspect the names at the three switches and save action"
+      ]
+    },
+    {
+      "id": "keyboard-service-links-unnamed",
+      "testerId": "keyboard",
+      "route": "/what-we-help-with",
+      "stepId": "explore",
+      "category": "accessibility",
+      "severity": "high",
+      "observation": {
+        "summary": "Service-card detail links are unnamed in the accessibility tree",
+        "expected": "Each linked service icon has a useful accessible name.",
+        "actual": "Keyboard traversal reached service-detail anchors with an empty accessible name, including Feeding."
+      },
+      "evidence": [
+        {
+          "pageUrl": "https://www.hestahealth.com/what-we-help-with",
+          "attemptedAction": "Tabbed through the service content and recorded the focused element.",
+          "screenshot": {
+            "id": "keyboard-explore",
+            "label": "Noor · Explore care options",
+            "source": "demo-placeholder",
+            "url": "https://trialroom-sigma.vercel.app/demo/hesta/keyboard/02-explore.jpg",
+            "width": 960,
+            "height": 540
+          },
+          "consoleErrors": [],
+          "failedRequests": [],
+          "elapsedMs": 1450
+        }
+      ],
+      "reproduction": [
+        "Open What we help with",
+        "Tab through service content",
+        "Inspect the focused service-detail link name"
+      ]
+    },
+    {
+      "id": "keyboard-heading-hierarchy",
+      "testerId": "keyboard",
+      "route": "/how-works",
+      "stepId": "how-it-works",
+      "category": "accessibility",
+      "severity": "medium",
+      "observation": {
+        "summary": "The How it works page has no page-level heading",
+        "expected": "Page headings begin with one descriptive h1 and follow a predictable order.",
+        "actual": "The page had no detected h1 and began with h3, then h2 and h5."
+      },
+      "evidence": [
+        {
+          "pageUrl": "https://www.hestahealth.com/how-works",
+          "attemptedAction": "Inspected headings in DOM order after opening How it works with the keyboard.",
+          "screenshot": {
+            "id": "keyboard-how-it-works",
+            "label": "Noor · Understand the pathway",
+            "source": "demo-placeholder",
+            "url": "https://trialroom-sigma.vercel.app/demo/hesta/keyboard/03-how-it-works.jpg",
+            "width": 960,
+            "height": 540
+          },
+          "consoleErrors": [],
+          "failedRequests": [],
+          "elapsedMs": 830
+        }
+      ],
+      "reproduction": [
+        "Open How it works",
+        "Inspect headings in DOM order",
+        "Observe the missing h1 and skipped levels"
+      ]
+    },
+    {
+      "id": "keyboard-faq-horizontal-clipping",
+      "testerId": "keyboard",
+      "route": "/support",
+      "stepId": "support",
+      "category": "accessibility",
+      "severity": "medium",
+      "observation": {
+        "summary": "Keyboard focus shifts the FAQ disclosure partly out of view",
+        "expected": "Focusing a disclosure keeps it and the surrounding content fully visible.",
+        "actual": "At 960 px, the focused 914 px FAQ button began at x=-141 and its question text was visibly clipped."
+      },
+      "evidence": [
+        {
+          "pageUrl": "https://www.hestahealth.com/support",
+          "attemptedAction": "Tabbed to the first FAQ disclosure and opened it with Enter.",
+          "screenshot": {
+            "id": "keyboard-support",
+            "label": "Noor · Find support",
+            "source": "demo-placeholder",
+            "url": "https://trialroom-sigma.vercel.app/demo/hesta/keyboard/04-support.jpg",
+            "width": 960,
+            "height": 540
+          },
+          "consoleErrors": [],
+          "failedRequests": [],
+          "elapsedMs": 1260
+        }
+      ],
+      "reproduction": [
+        "Open FAQs at 960 px",
+        "Tab to What is Hesta Health?",
+        "Observe the focused question clipped on the left"
+      ]
+    }
+  ]
+}

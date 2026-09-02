@@ -1,0 +1,59 @@
+{
+  "runId": "seeded-hesta-health-study",
+  "title": "Hesta Health public-site study",
+  "targetUrl": "https://www.hestahealth.com/",
+  "seeded": true,
+  "generatedBy": "TrialRoom synthetic testers",
+  "testers": [
+    {
+      "personaId": "first-time",
+      "name": "Maya, the first-time user",
+      "status": "completed",
+      "resultUrl": "https://trialroom-sigma.vercel.app/demo/hesta/results/trialroom-first-time.json"
+    },
+    {
+      "personaId": "impatient",
+      "name": "Leo, the impatient user",
+      "status": "completed",
+      "resultUrl": "https://trialroom-sigma.vercel.app/demo/hesta/results/trialroom-impatient.json"
+    },
+    {
+      "personaId": "keyboard",
+      "name": "Noor, the keyboard user",
+      "status": "completed",
+      "resultUrl": "https://trialroom-sigma.vercel.app/demo/hesta/results/trialroom-keyboard.json"
+    },
+    {
+      "personaId": "edge-case",
+      "name": "Eli, the edge-case user",
+      "status": "completed",
+      "resultUrl": "https://trialroom-sigma.vercel.app/demo/hesta/results/trialroom-edge-case.json"
+    }
+  ],
+  "artifacts": [
+    "https://trialroom-sigma.vercel.app/demo/hesta/first-time/01-orient.png",
+    "https://trialroom-sigma.vercel.app/demo/hesta/first-time/02-explore.png",
+    "https://trialroom-sigma.vercel.app/demo/hesta/first-time/03-how-it-works.png",
+    "https://trialroom-sigma.vercel.app/demo/hesta/first-time/04-support.png",
+    "https://trialroom-sigma.vercel.app/demo/hesta/first-time/05-mobile.jpg",
+    "https://trialroom-sigma.vercel.app/demo/hesta/results/trialroom-first-time.json",
+    "https://trialroom-sigma.vercel.app/demo/hesta/impatient/01-orient.jpg",
+    "https://trialroom-sigma.vercel.app/demo/hesta/impatient/02-explore.jpg",
+    "https://trialroom-sigma.vercel.app/demo/hesta/impatient/03-how-it-works.jpg",
+    "https://trialroom-sigma.vercel.app/demo/hesta/impatient/04-support.jpg",
+    "https://trialroom-sigma.vercel.app/demo/hesta/impatient/05-mobile.jpg",
+    "https://trialroom-sigma.vercel.app/demo/hesta/results/trialroom-impatient.json",
+    "https://trialroom-sigma.vercel.app/demo/hesta/keyboard/01-orient.jpg",
+    "https://trialroom-sigma.vercel.app/demo/hesta/keyboard/02-explore.jpg",
+    "https://trialroom-sigma.vercel.app/demo/hesta/keyboard/03-how-it-works.jpg",
+    "https://trialroom-sigma.vercel.app/demo/hesta/keyboard/04-support.jpg",
+    "https://trialroom-sigma.vercel.app/demo/hesta/keyboard/05-mobile.jpg",
+    "https://trialroom-sigma.vercel.app/demo/hesta/results/trialroom-keyboard.json",
+    "https://trialroom-sigma.vercel.app/demo/hesta/edge-case/01-orient.png",
+    "https://trialroom-sigma.vercel.app/demo/hesta/edge-case/02-explore.png",
+    "https://trialroom-sigma.vercel.app/demo/hesta/edge-case/03-how-it-works.png",
+    "https://trialroom-sigma.vercel.app/demo/hesta/edge-case/04-support.png",
+    "https://trialroom-sigma.vercel.app/demo/hesta/edge-case/05-mobile.png",
+    "https://trialroom-sigma.vercel.app/demo/hesta/results/trialroom-edge-case.json"
+  ]
+}

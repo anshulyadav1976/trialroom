@@ -1,0 +1,195 @@
+{
+  "runId": "seeded-hesta-health-study",
+  "personaId": "edge-case",
+  "targetUrl": "https://www.hestahealth.com/",
+  "status": "completed",
+  "steps": [
+    {
+      "id": "orient",
+      "title": "Understand Hesta",
+      "mission": "Identify the service and its primary care action.",
+      "outcome": "friction",
+      "durationMs": 1510,
+      "observationCount": 1,
+      "screenshot": {
+        "id": "edge-case-orient",
+        "label": "Eli · Understand Hesta",
+        "source": "demo-placeholder",
+        "url": "https://trialroom-sigma.vercel.app/demo/hesta/edge-case/01-orient.png",
+        "width": 1440,
+        "height": 1000
+      }
+    },
+    {
+      "id": "explore",
+      "title": "Explore care options",
+      "mission": "Compare available postnatal care and next steps.",
+      "outcome": "friction",
+      "durationMs": 1260,
+      "observationCount": 1,
+      "screenshot": {
+        "id": "edge-case-explore",
+        "label": "Eli · Explore care options",
+        "source": "demo-placeholder",
+        "url": "https://trialroom-sigma.vercel.app/demo/hesta/edge-case/02-explore.png",
+        "width": 1440,
+        "height": 1000
+      }
+    },
+    {
+      "id": "how-it-works",
+      "title": "Understand the pathway",
+      "mission": "Learn how care begins and what to expect.",
+      "outcome": "pass",
+      "durationMs": 1180,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "edge-case-how-it-works",
+        "label": "Eli · Understand the pathway",
+        "source": "demo-placeholder",
+        "url": "https://trialroom-sigma.vercel.app/demo/hesta/edge-case/03-how-it-works.png",
+        "width": 1440,
+        "height": 1000
+      }
+    },
+    {
+      "id": "support",
+      "title": "Find support",
+      "mission": "Locate trustworthy help without submitting a form.",
+      "outcome": "pass",
+      "durationMs": 1220,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "edge-case-support",
+        "label": "Eli · Find support",
+        "source": "demo-placeholder",
+        "url": "https://trialroom-sigma.vercel.app/demo/hesta/edge-case/04-support.png",
+        "width": 1440,
+        "height": 1000
+      }
+    },
+    {
+      "id": "mobile",
+      "title": "Check the mobile entry",
+      "mission": "Revisit the entry point in a narrow viewport.",
+      "outcome": "fail",
+      "durationMs": 1040,
+      "observationCount": 1,
+      "screenshot": {
+        "id": "edge-case-mobile",
+        "label": "Eli · Check the mobile entry",
+        "source": "demo-placeholder",
+        "url": "https://trialroom-sigma.vercel.app/demo/hesta/edge-case/05-mobile.png",
+        "width": 390,
+        "height": 844
+      }
+    }
+  ],
+  "findings": [
+    {
+      "id": "edge-consent-obscures-entry",
+      "testerId": "edge-case",
+      "route": "/",
+      "stepId": "orient",
+      "category": "interaction",
+      "severity": "medium",
+      "observation": {
+        "summary": "The consent layer dominates the first product impression",
+        "expected": "Consent controls preserve enough product context for orientation.",
+        "actual": "The consent layer dimmed the interface and occupied roughly the bottom fifth of the first viewport."
+      },
+      "evidence": [
+        {
+          "pageUrl": "https://www.hestahealth.com/",
+          "attemptedAction": "Opened the homepage in a fresh browser profile and made no cookie choice.",
+          "screenshot": {
+            "id": "edge-case-orient",
+            "label": "Eli · Understand Hesta",
+            "source": "demo-placeholder",
+            "url": "https://trialroom-sigma.vercel.app/demo/hesta/edge-case/01-orient.png",
+            "width": 1440,
+            "height": 1000
+          },
+          "consoleErrors": [],
+          "failedRequests": [],
+          "elapsedMs": 1510
+        }
+      ],
+      "reproduction": [
+        "Open the homepage in a fresh profile",
+        "Do not make a cookie choice",
+        "Compare the consent panel with the primary care action"
+      ]
+    },
+    {
+      "id": "edge-care-copy-polish",
+      "testerId": "edge-case",
+      "route": "/what-we-help-with",
+      "stepId": "explore",
+      "category": "comprehension",
+      "severity": "low",
+      "observation": {
+        "summary": "Care catalogue copy contains visible punctuation defects",
+        "expected": "Sensitive healthcare service descriptions use polished copy.",
+        "actual": "The page showed “And more....” and “Confidential,specialist” without a space."
+      },
+      "evidence": [
+        {
+          "pageUrl": "https://www.hestahealth.com/what-we-help-with",
+          "attemptedAction": "Read the Mental health and final care-category descriptions.",
+          "screenshot": {
+            "id": "edge-case-explore",
+            "label": "Eli · Explore care options",
+            "source": "demo-placeholder",
+            "url": "https://trialroom-sigma.vercel.app/demo/hesta/edge-case/02-explore.png",
+            "width": 1440,
+            "height": 1000
+          },
+          "consoleErrors": [],
+          "failedRequests": [],
+          "elapsedMs": 1260
+        }
+      ],
+      "reproduction": [
+        "Open What we help with",
+        "Read the Mental health description",
+        "Read the final care-category label"
+      ]
+    },
+    {
+      "id": "edge-mobile-layout-overflow",
+      "testerId": "edge-case",
+      "route": "/",
+      "stepId": "mobile",
+      "category": "navigation",
+      "severity": "high",
+      "observation": {
+        "summary": "The mobile landing page extends far beyond the viewport",
+        "expected": "Landing content reflows inside a 390 px viewport.",
+        "actual": "At 390 px, the hero headline and paragraphs continued beyond the right edge and no mobile navigation control was visible."
+      },
+      "evidence": [
+        {
+          "pageUrl": "https://www.hestahealth.com/",
+          "attemptedAction": "Opened the homepage in a fresh 390 × 844 browser context.",
+          "screenshot": {
+            "id": "edge-case-mobile",
+            "label": "Eli · Check the mobile entry",
+            "source": "demo-placeholder",
+            "url": "https://trialroom-sigma.vercel.app/demo/hesta/edge-case/05-mobile.png",
+            "width": 390,
+            "height": 844
+          },
+          "consoleErrors": [],
+          "failedRequests": [],
+          "elapsedMs": 1040
+        }
+      ],
+      "reproduction": [
+        "Open the homepage at 390 × 844",
+        "Inspect the header and hero",
+        "Observe copy ending beyond the right edge"
+      ]
+    }
+  ]
+}

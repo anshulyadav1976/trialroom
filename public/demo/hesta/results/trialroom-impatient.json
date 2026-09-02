@@ -1,0 +1,160 @@
+{
+  "runId": "seeded-hesta-health-study",
+  "personaId": "impatient",
+  "targetUrl": "https://www.hestahealth.com/",
+  "status": "completed",
+  "steps": [
+    {
+      "id": "orient",
+      "title": "Understand Hesta",
+      "mission": "Identify the service and its primary care action.",
+      "outcome": "pass",
+      "durationMs": 816,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "impatient-orient",
+        "label": "Leo · Understand Hesta",
+        "source": "demo-placeholder",
+        "url": "https://trialroom-sigma.vercel.app/demo/hesta/impatient/01-orient.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "id": "explore",
+      "title": "Explore care options",
+      "mission": "Compare available postnatal care and next steps.",
+      "outcome": "pass",
+      "durationMs": 500,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "impatient-explore",
+        "label": "Leo · Explore care options",
+        "source": "demo-placeholder",
+        "url": "https://trialroom-sigma.vercel.app/demo/hesta/impatient/02-explore.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "id": "how-it-works",
+      "title": "Understand the pathway",
+      "mission": "Learn how care begins and what to expect.",
+      "outcome": "friction",
+      "durationMs": 572,
+      "observationCount": 1,
+      "screenshot": {
+        "id": "impatient-how-it-works",
+        "label": "Leo · Understand the pathway",
+        "source": "demo-placeholder",
+        "url": "https://trialroom-sigma.vercel.app/demo/hesta/impatient/03-how-it-works.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "id": "support",
+      "title": "Find support",
+      "mission": "Locate trustworthy help without submitting a form.",
+      "outcome": "pass",
+      "durationMs": 500,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "impatient-support",
+        "label": "Leo · Find support",
+        "source": "demo-placeholder",
+        "url": "https://trialroom-sigma.vercel.app/demo/hesta/impatient/04-support.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "id": "mobile",
+      "title": "Check the mobile entry",
+      "mission": "Revisit the entry point in a narrow viewport.",
+      "outcome": "fail",
+      "durationMs": 1128,
+      "observationCount": 1,
+      "screenshot": {
+        "id": "impatient-mobile",
+        "label": "Leo · Check the mobile entry",
+        "source": "demo-placeholder",
+        "url": "https://trialroom-sigma.vercel.app/demo/hesta/impatient/05-mobile.jpg",
+        "width": 390,
+        "height": 844
+      }
+    }
+  ],
+  "findings": [
+    {
+      "id": "impatient-active-navigation",
+      "testerId": "impatient",
+      "route": "/how-works",
+      "stepId": "how-it-works",
+      "category": "navigation",
+      "severity": "low",
+      "observation": {
+        "summary": "The current navigation section is not visually distinguished",
+        "expected": "The persistent navigation identifies the page currently being viewed.",
+        "actual": "How it works had no aria-current value and matched the computed presentation of the About us peer link."
+      },
+      "evidence": [
+        {
+          "pageUrl": "https://www.hestahealth.com/how-works",
+          "attemptedAction": "Opened How it works quickly and compared the persistent navigation links.",
+          "screenshot": {
+            "id": "impatient-how-it-works",
+            "label": "Leo · Understand the pathway",
+            "source": "demo-placeholder",
+            "url": "https://trialroom-sigma.vercel.app/demo/hesta/impatient/03-how-it-works.jpg",
+            "width": 1280,
+            "height": 720
+          },
+          "consoleErrors": [],
+          "failedRequests": [],
+          "elapsedMs": 572
+        }
+      ],
+      "reproduction": [
+        "Open the homepage",
+        "Select How it works",
+        "Compare its header link with About us"
+      ]
+    },
+    {
+      "id": "impatient-mobile-layout-overflow",
+      "testerId": "impatient",
+      "route": "/",
+      "stepId": "mobile",
+      "category": "navigation",
+      "severity": "high",
+      "observation": {
+        "summary": "The mobile landing page extends far beyond the viewport",
+        "expected": "Landing content reflows inside a 390 px viewport.",
+        "actual": "At 390 px, clientWidth was 390 but content scrollWidth was 1134; hero copy clipped at the right edge."
+      },
+      "evidence": [
+        {
+          "pageUrl": "https://www.hestahealth.com/",
+          "attemptedAction": "Opened the homepage in a 390 × 844 mobile browser context.",
+          "screenshot": {
+            "id": "impatient-mobile",
+            "label": "Leo · Check the mobile entry",
+            "source": "demo-placeholder",
+            "url": "https://trialroom-sigma.vercel.app/demo/hesta/impatient/05-mobile.jpg",
+            "width": 390,
+            "height": 844
+          },
+          "consoleErrors": [],
+          "failedRequests": [],
+          "elapsedMs": 1128
+        }
+      ],
+      "reproduction": [
+        "Open the homepage at 390 × 844",
+        "Compare clientWidth with scrollWidth",
+        "Observe the clipped hero copy"
+      ]
+    }
+  ]
+}

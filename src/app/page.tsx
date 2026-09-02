@@ -187,7 +187,7 @@ export default function Home() {
       if (!active) return;
       const runs = runList(payload).filter((run) => run.id !== "seeded-todomvc-preview");
       setHistory(runs);
-      const featured = runs.find((run) => run.id === "seeded-saucedemo-showcase");
+      const featured = runs.find((run) => run.id === "seeded-hesta-health-study") ?? runs.find((run) => run.id === "seeded-saucedemo-showcase");
       const params = new URLSearchParams(window.location.search);
       const requestedSession = params.get("session");
       const requestedView = params.get("view") as View | null;
@@ -329,6 +329,8 @@ export default function Home() {
   const targetName = (() => { try { return new URL(targetUrl).hostname; } catch { return "New product"; } })();
   const activeFinding = findings.find((finding) => finding.id === selectedFinding) ?? findings[0];
   const featuredEvidence = liveRun?.seeded || liveRun?.id === "seeded-saucedemo-showcase";
+  const presentationFinding = results?.findings.find((finding) => finding.severity === "critical" || finding.severity === "high") ?? results?.findings[0];
+  const presentationNodeId = presentationFinding ? `${presentationFinding.testerId}-${presentationFinding.stepId}` : undefined;
 
   function changeView(next: View) {
     setView(next);
@@ -364,13 +366,13 @@ export default function Home() {
 
     <section className="workspace">
       <header className="topbar"><div><span className="eyebrow">Synthetic product study · {mode === "preview" ? "Preview data" : featuredEvidence ? "Seeded evidence" : "Live Sparkles"}</span><h1>{view === "overview" ? "The room at a glance" : view === "testers" ? "Four perspectives, live" : view === "findings" ? "Evidence worth acting on" : "Every journey, in context"}</h1></div><div className="topbar-actions">{featuredEvidence && liveRun?.completedAt && <button className="present-button" onClick={startPresentation} disabled={!results}><Icon name="play"/>{results ? "Present study" : "Loading evidence"}</button>}<button className="run-button" onClick={mode === "preview" ? runDemo : featuredEvidence ? newStudy : runLive} disabled={running}><Icon name="play"/>{mode === "preview" ? previewRunning ? `Running · ${phase}/5` : phase === 6 ? "Run preview again" : "Run preview" : featuredEvidence ? "Start new study" : starting ? "Starting four rooms" : liveRunning ? "Study running" : liveRun ? "Run live again" : "Run live study"}<span><Icon name="arrow"/></span></button></div></header>
-      {presentationStep !== null && <section className="presentation-rail" aria-label="Captured evidence presentation"><div><span className="eyebrow">Captured evidence presentation · {presentationStep + 1} / 3</span><strong>{presentationStep === 0 ? "Begin with the study readout" : presentationStep === 1 ? "Inspect the keyboard blocker" : "See the blocked cart moment in context"}</strong><small>Replaying a completed SauceDemo study. No new testing is running.</small></div><div className="presentation-progress" aria-hidden="true">{[0, 1, 2].map((step) => <i className={step <= presentationStep ? "active" : ""} key={step}/>)}</div><button className="presentation-close" onClick={() => setPresentationStep(null)}>Close</button><button className="presentation-next" onClick={advancePresentation}>{presentationStep === 2 ? "Finish" : "Next"}<Icon name="arrow"/></button></section>}
+      {presentationStep !== null && <section className="presentation-rail" aria-label="Captured evidence presentation"><div><span className="eyebrow">Captured evidence presentation · {presentationStep + 1} / 3</span><strong>{presentationStep === 0 ? "Begin with the study readout" : presentationStep === 1 ? "Inspect the highest-priority finding" : "See the evidence moment in context"}</strong><small>Replaying a completed {liveRun?.targetName ?? "product"} study. No new testing is running.</small></div><div className="presentation-progress" aria-hidden="true">{[0, 1, 2].map((step) => <i className={step <= presentationStep ? "active" : ""} key={step}/>)}</div><button className="presentation-close" onClick={() => setPresentationStep(null)}>Close</button><button className="presentation-next" onClick={advancePresentation}>{presentationStep === 2 ? "Finish" : "Next"}<Icon name="arrow"/></button></section>}
       <section className="run-strip" aria-label="Study target"><label><span>Product URL</span><input type="url" value={targetUrl} onChange={(event) => setTargetUrl(event.target.value)} disabled={running}/></label><label><span>Source repository <i>optional</i></span><input value={repository} onChange={(event) => setRepository(event.target.value)} placeholder="owner/repository" disabled={running}/></label><div className="run-mode" aria-label="Study mode"><button className={mode === "preview" ? "selected" : ""} onClick={() => { setMode("preview"); setRunError(""); }}>Preview</button><button className={mode === "live" ? "selected" : ""} onClick={() => { setMode("live"); setRunError(""); }}>Live</button></div></section>
       {runError && <div className="run-error" role="alert"><span><b>Live study did not start.</b>{runError}. Choose Preview to explore the full study.</span><button onClick={() => { setMode("preview"); setRunError(""); }}>Use preview</button></div>}
       {view === "overview" && (mode === "live" ? <LiveOverview run={liveRun} study={results}/> : <Overview phase={phase}/>)}
       {view === "testers" && <LiveTesters phase={phase} run={mode === "live" ? liveRun : null} study={mode === "live" ? results : null}/>}
-      {view === "findings" && (mode === "live" ? results ? <LiveFindings study={results} repository={repository || (featuredEvidence ? "saucelabs/sample-app-web" : "")} targetUrl={targetUrl} focusFindingId={presentationStep === 1 ? "keyboard-cart-unreachable" : undefined}/> : <LiveEvidencePending kind="findings" run={liveRun}/> : <Findings active={activeFinding} select={setSelectedFinding}/>)}
-      {view === "board" && (mode === "live" ? results ? <JourneyBoard key={presentationStep === 2 ? "presenting" : "standard"} study={results} spotlightNodeId={presentationStep === 2 ? "keyboard-cart" : undefined}/> : <LiveEvidencePending kind="board" run={liveRun}/> : <JourneyBoard/>)}
+      {view === "findings" && (mode === "live" ? results ? <LiveFindings study={results} repository={repository || (liveRun?.id === "seeded-saucedemo-showcase" ? "saucelabs/sample-app-web" : "")} targetUrl={targetUrl} focusFindingId={presentationStep === 1 ? presentationFinding?.id : undefined}/> : <LiveEvidencePending kind="findings" run={liveRun}/> : <Findings active={activeFinding} select={setSelectedFinding}/>)}
+      {view === "board" && (mode === "live" ? results ? <JourneyBoard key={presentationStep === 2 ? "presenting" : "standard"} study={results} spotlightNodeId={presentationStep === 2 ? presentationNodeId : undefined}/> : <LiveEvidencePending kind="board" run={liveRun}/> : <JourneyBoard/>)}
     </section>
   </main>;
 }

@@ -1,0 +1,230 @@
+{
+  "runId": "seeded-hesta-health-study",
+  "personaId": "first-time",
+  "targetUrl": "https://www.hestahealth.com/",
+  "status": "completed",
+  "steps": [
+    {
+      "id": "orient",
+      "title": "Understand Hesta",
+      "mission": "Identify the service and its primary care action.",
+      "outcome": "friction",
+      "durationMs": 1380,
+      "observationCount": 1,
+      "screenshot": {
+        "id": "first-time-orient",
+        "label": "Maya · Understand Hesta",
+        "source": "demo-placeholder",
+        "url": "https://trialroom-sigma.vercel.app/demo/hesta/first-time/01-orient.png",
+        "width": 1440,
+        "height": 757
+      }
+    },
+    {
+      "id": "explore",
+      "title": "Explore care options",
+      "mission": "Compare available postnatal care and next steps.",
+      "outcome": "friction",
+      "durationMs": 1283,
+      "observationCount": 2,
+      "screenshot": {
+        "id": "first-time-explore",
+        "label": "Maya · Explore care options",
+        "source": "demo-placeholder",
+        "url": "https://trialroom-sigma.vercel.app/demo/hesta/first-time/02-explore.png",
+        "width": 1440,
+        "height": 757
+      }
+    },
+    {
+      "id": "how-it-works",
+      "title": "Understand the pathway",
+      "mission": "Learn how care begins and what to expect.",
+      "outcome": "pass",
+      "durationMs": 1325,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "first-time-how-it-works",
+        "label": "Maya · Understand the pathway",
+        "source": "demo-placeholder",
+        "url": "https://trialroom-sigma.vercel.app/demo/hesta/first-time/03-how-it-works.png",
+        "width": 1440,
+        "height": 757
+      }
+    },
+    {
+      "id": "support",
+      "title": "Find support",
+      "mission": "Locate trustworthy help without submitting a form.",
+      "outcome": "friction",
+      "durationMs": 1211,
+      "observationCount": 1,
+      "screenshot": {
+        "id": "first-time-support",
+        "label": "Maya · Find support",
+        "source": "demo-placeholder",
+        "url": "https://trialroom-sigma.vercel.app/demo/hesta/first-time/04-support.png",
+        "width": 1440,
+        "height": 757
+      }
+    },
+    {
+      "id": "mobile",
+      "title": "Check the mobile entry",
+      "mission": "Revisit the entry point in a narrow viewport.",
+      "outcome": "pass",
+      "durationMs": 1100,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "first-time-mobile",
+        "label": "Maya · Check the mobile entry",
+        "source": "demo-placeholder",
+        "url": "https://trialroom-sigma.vercel.app/demo/hesta/first-time/05-mobile.jpg",
+        "width": 390,
+        "height": 844
+      }
+    }
+  ],
+  "findings": [
+    {
+      "id": "first-time-consent-obscures-entry",
+      "testerId": "first-time",
+      "route": "/",
+      "stepId": "orient",
+      "category": "interaction",
+      "severity": "medium",
+      "observation": {
+        "summary": "The consent layer dominates the first product impression",
+        "expected": "A first-time visitor can understand the core service while making a clear consent choice.",
+        "actual": "A modal-style consent layer dimmed the whole page and covered the lower viewport until a choice was made."
+      },
+      "evidence": [
+        {
+          "pageUrl": "https://www.hestahealth.com/",
+          "attemptedAction": "Opened the homepage in a fresh browser profile.",
+          "screenshot": {
+            "id": "first-time-orient",
+            "label": "Maya · Understand Hesta",
+            "source": "demo-placeholder",
+            "url": "https://trialroom-sigma.vercel.app/demo/hesta/first-time/01-orient.png",
+            "width": 1440,
+            "height": 757
+          },
+          "consoleErrors": [],
+          "failedRequests": [],
+          "elapsedMs": 1380
+        }
+      ],
+      "reproduction": [
+        "Open the homepage in a fresh profile",
+        "Do not make a cookie choice",
+        "Observe the dimmed hero and consent panel"
+      ]
+    },
+    {
+      "id": "first-time-service-links-unnamed",
+      "testerId": "first-time",
+      "route": "/what-we-help-with",
+      "stepId": "explore",
+      "category": "accessibility",
+      "severity": "medium",
+      "observation": {
+        "summary": "Service-card detail links are unnamed in the accessibility tree",
+        "expected": "Each service detail link has a descriptive accessible name.",
+        "actual": "The browser exposed separate detail links with empty accessible names, including the pelvic-floor link."
+      },
+      "evidence": [
+        {
+          "pageUrl": "https://www.hestahealth.com/what-we-help-with",
+          "attemptedAction": "Enumerated service links and inspected their accessible names.",
+          "screenshot": {
+            "id": "first-time-explore",
+            "label": "Maya · Explore care options",
+            "source": "demo-placeholder",
+            "url": "https://trialroom-sigma.vercel.app/demo/hesta/first-time/02-explore.png",
+            "width": 1440,
+            "height": 757
+          },
+          "consoleErrors": [],
+          "failedRequests": [],
+          "elapsedMs": 1283
+        }
+      ],
+      "reproduction": [
+        "Open What we help with",
+        "Inspect the page links",
+        "Locate the unnamed service-detail anchors"
+      ]
+    },
+    {
+      "id": "first-time-price-conflict",
+      "testerId": "first-time",
+      "route": "/what-we-help-with",
+      "stepId": "explore",
+      "category": "comprehension",
+      "severity": "medium",
+      "observation": {
+        "summary": "The lactation starting price changes between discovery surfaces",
+        "expected": "The same service presents one current starting price across the site.",
+        "actual": "The homepage rendered From £125 while What we help with rendered From £85 for lactation support."
+      },
+      "evidence": [
+        {
+          "pageUrl": "https://www.hestahealth.com/what-we-help-with",
+          "attemptedAction": "Compared rendered lactation prices on the homepage and service directory.",
+          "screenshot": {
+            "id": "first-time-explore",
+            "label": "Maya · Explore care options",
+            "source": "demo-placeholder",
+            "url": "https://trialroom-sigma.vercel.app/demo/hesta/first-time/02-explore.png",
+            "width": 1440,
+            "height": 757
+          },
+          "consoleErrors": [],
+          "failedRequests": [],
+          "elapsedMs": 1283
+        }
+      ],
+      "reproduction": [
+        "Note the homepage lactation price",
+        "Open What we help with",
+        "Compare the lactation price"
+      ]
+    },
+    {
+      "id": "first-time-support-email-conflict",
+      "testerId": "first-time",
+      "route": "/contact-2",
+      "stepId": "support",
+      "category": "navigation",
+      "severity": "medium",
+      "observation": {
+        "summary": "Care and support enquiries are directed to different addresses",
+        "expected": "Support surfaces give one address or explain when each address applies.",
+        "actual": "FAQs and the footer use support@hesta.health while Contact Details directs care or support enquiries to hello@hesta.health."
+      },
+      "evidence": [
+        {
+          "pageUrl": "https://www.hestahealth.com/contact-2",
+          "attemptedAction": "Compared the support and contact surfaces without sending a message.",
+          "screenshot": {
+            "id": "first-time-support",
+            "label": "Maya · Find support",
+            "source": "demo-placeholder",
+            "url": "https://trialroom-sigma.vercel.app/demo/hesta/first-time/04-support.png",
+            "width": 1440,
+            "height": 757
+          },
+          "consoleErrors": [],
+          "failedRequests": [],
+          "elapsedMs": 1211
+        }
+      ],
+      "reproduction": [
+        "Open FAQs",
+        "Note the support email",
+        "Open Contact us and compare its care or support email"
+      ]
+    }
+  ]
+}
