@@ -1,9 +1,17 @@
-import { createSandbox } from "@/lib/sparkles/client";
+import { createSandbox, listSandboxes } from "@/lib/sparkles/client";
 import { fixDigest, fixPrompt, parseFixRequest } from "@/lib/sparkles/fix";
 import { acquireStudyLock, durableRunsEnabled, releaseStudyLock } from "@/lib/sparkles/persistence";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+export const maxDuration = 300;
+
+async function existingFix(lockId: string) {
+  try {
+    return (await listSandboxes()).find((sandbox) => sandbox.metadata?.fixId === lockId && sandbox.status !== "terminated");
+  } catch {
+    return undefined;
+  }
+}
 
 export async function POST(request: Request) {
   let body: unknown;
@@ -22,8 +30,18 @@ export async function POST(request: Request) {
 
   const digest = fixDigest(input);
   const lockId = `fix_${digest}`;
+  const existing = await existingFix(lockId);
+  if (existing) return Response.json({ sandboxId: existing.id, status: existing.status ?? "queued" });
+
   if (!(await acquireStudyLock(lockId, async (lockedId) => lockedId.startsWith("fix_")))) {
-    return Response.json({ error: "Another study or fix room is already active" }, { status: 429 });
+    // The same idempotent request may have outlived a client/Vercel timeout. Clear only
+    // its own orphaned lease; a different study lock remains untouched.
+    await releaseStudyLock(lockId);
+    const recovered = await existingFix(lockId);
+    if (recovered) return Response.json({ sandboxId: recovered.id, status: recovered.status ?? "queued" });
+    if (!(await acquireStudyLock(lockId, async (lockedId) => lockedId.startsWith("fix_")))) {
+      return Response.json({ error: "Another study or fix room is already active" }, { status: 429 });
+    }
   }
 
   try {

@@ -60,6 +60,18 @@ export async function getSandbox(sandboxId: string) {
   return (await response.json()) as { status?: string; sandbox?: { status?: string } };
 }
 
+export async function listSandboxes() {
+  const response = await request("/sandboxes");
+  const body = (await response.json()) as {
+    data?: Array<{
+      id: string;
+      status?: string;
+      metadata?: Record<string, string>;
+    }>;
+  };
+  return body.data ?? [];
+}
+
 export function streamSandboxEvents(sandboxId: string, since?: string, signal?: AbortSignal) {
   const query = since ? `?${new URLSearchParams({ since })}` : "";
   return request(`/sandboxes/${encodeURIComponent(sandboxId)}/events/stream${query}`, {
