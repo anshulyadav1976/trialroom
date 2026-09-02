@@ -1,0 +1,189 @@
+{
+  "runId": "seeded-saucedemo-first-time-evaluator",
+  "mode": "seeded-evidence",
+  "targetUrl": "https://www.saucedemo.com/",
+  "persona": {
+    "id": "first-time-evaluator",
+    "name": "First-time Evaluator"
+  },
+  "status": "completed",
+  "orderSubmitted": false,
+  "viewport": {
+    "width": 960,
+    "height": 540
+  },
+  "startedAt": "2026-09-02T19:09:56.071345Z",
+  "completedAt": "2026-09-02T19:09:57.817243Z",
+  "steps": [
+    {
+      "id": "login",
+      "title": "Enter public test credentials",
+      "outcome": "pass",
+      "elapsedMs": 1553,
+      "url": "https://www.saucedemo.com/",
+      "screenshot": "/demo/saucedemo/first-time-evaluator/01-login.jpg",
+      "observation": "The login form accepted the published SauceDemo standard-user credentials; the password remained masked."
+    },
+    {
+      "id": "catalog",
+      "title": "Inspect the product catalog",
+      "outcome": "pass",
+      "elapsedMs": 50,
+      "url": "https://www.saucedemo.com/inventory.html",
+      "screenshot": "/demo/saucedemo/first-time-evaluator/02-catalog.jpg",
+      "observation": "The catalog loaded 6 products and included Sauce Labs Backpack with the default az sort."
+    },
+    {
+      "id": "add-backpack",
+      "title": "Add Sauce Labs Backpack",
+      "outcome": "pass",
+      "elapsedMs": 26,
+      "url": "https://www.saucedemo.com/inventory.html",
+      "screenshot": "/demo/saucedemo/first-time-evaluator/03-add-backpack.jpg",
+      "observation": "The Add to cart action changed to Remove and the cart badge updated to 1."
+    },
+    {
+      "id": "cart",
+      "title": "Inspect the cart",
+      "outcome": "pass",
+      "elapsedMs": 30,
+      "url": "https://www.saucedemo.com/cart.html",
+      "screenshot": "/demo/saucedemo/first-time-evaluator/04-cart.jpg",
+      "observation": "The cart showed one Sauce Labs Backpack with quantity 1."
+    },
+    {
+      "id": "checkout",
+      "title": "Begin checkout and stop safely",
+      "outcome": "pass",
+      "elapsedMs": 33,
+      "url": "https://www.saucedemo.com/checkout-step-one.html",
+      "screenshot": "/demo/saucedemo/first-time-evaluator/05-checkout.jpg",
+      "observation": "Checkout opened the customer-information form. No Finish button was present, and the run stopped without submitting an order."
+    }
+  ],
+  "evidence": {
+    "consoleErrors": [
+      "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+      "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+    ],
+    "failedRequests": [
+      {
+        "url": "https://events.backtrace.io/api/summed-events/submit?universe=UNIVERSE&token=TOKEN",
+        "status": 401
+      },
+      {
+        "url": "https://events.backtrace.io/api/unique-events/submit?universe=UNIVERSE&token=TOKEN",
+        "status": 401
+      }
+    ],
+    "telemetry": {
+      "loginFieldSemantics": {
+        "username": {
+          "labelCount": 0,
+          "ariaLabel": null,
+          "ariaLabelledBy": null,
+          "placeholder": "Username"
+        },
+        "password": {
+          "labelCount": 0,
+          "ariaLabel": null,
+          "ariaLabelledBy": null,
+          "placeholder": "Password"
+        }
+      },
+      "catalog": {
+        "itemCount": 6,
+        "containsBackpack": true,
+        "sortValue": "az"
+      },
+      "addAction": {
+        "badgeAfterFirstPress": "1",
+        "buttonAfterFirstPress": "Remove"
+      },
+      "cart": {
+        "itemCount": 1,
+        "quantity": "1"
+      },
+      "checkout": {
+        "fieldSemantics": [
+          {
+            "labelCount": 0,
+            "ariaLabel": null,
+            "ariaLabelledBy": null,
+            "placeholder": "First Name"
+          },
+          {
+            "labelCount": 0,
+            "ariaLabel": null,
+            "ariaLabelledBy": null,
+            "placeholder": "Last Name"
+          },
+          {
+            "labelCount": 0,
+            "ariaLabel": null,
+            "ariaLabelledBy": null,
+            "placeholder": "Zip/Postal Code"
+          }
+        ],
+        "finishButtonVisible": false,
+        "url": "https://www.saucedemo.com/checkout-step-one.html"
+      }
+    }
+  },
+  "findings": [
+    {
+      "id": "login-fields-rely-on-placeholders",
+      "stepId": "login",
+      "category": "accessibility",
+      "severity": "medium",
+      "observation": "Username and password fields have no associated label, aria-label, or aria-labelledby value.",
+      "expected": "Login fields retain an explicit programmatic identity after a user types into them.",
+      "actual": "Both fields rely on placeholder text and expose no label association or ARIA naming attribute.",
+      "technicalEvidence": {
+        "username": {
+          "labelCount": 0,
+          "ariaLabel": null,
+          "ariaLabelledBy": null,
+          "placeholder": "Username"
+        },
+        "password": {
+          "labelCount": 0,
+          "ariaLabel": null,
+          "ariaLabelledBy": null,
+          "placeholder": "Password"
+        }
+      },
+      "reproduction": [
+        "Open SauceDemo.",
+        "Inspect the username and password fields.",
+        "Observe that field identity is provided by placeholder text rather than an explicit label."
+      ],
+      "screenshot": "/demo/saucedemo/first-time-evaluator/01-login.jpg"
+    },
+    {
+      "id": "telemetry-requests-return-401",
+      "stepId": "login",
+      "category": "reliability",
+      "severity": "low",
+      "observation": "Two Backtrace telemetry submissions returned HTTP 401 and produced browser console errors; the shopping journey still completed.",
+      "expected": "Background telemetry requests complete without authorization errors or console noise.",
+      "actual": "The summed-events and unique-events submission endpoints each returned HTTP 401.",
+      "technicalEvidence": [
+        {
+          "url": "https://events.backtrace.io/api/summed-events/submit?universe=UNIVERSE&token=TOKEN",
+          "status": 401
+        },
+        {
+          "url": "https://events.backtrace.io/api/unique-events/submit?universe=UNIVERSE&token=TOKEN",
+          "status": 401
+        }
+      ],
+      "reproduction": [
+        "Open SauceDemo in a fresh browser context.",
+        "Watch failed HTTP responses during page load.",
+        "Observe 401 responses from the Backtrace summed-events and unique-events submission endpoints."
+      ],
+      "screenshot": "/demo/saucedemo/first-time-evaluator/01-login.jpg"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "runId": "seeded-saucedemo-showcase",
+  "title": "SauceDemo checkout study",
+  "targetUrl": "https://www.saucedemo.com/",
+  "seeded": true,
+  "generatedBy": "TrialRoom synthetic testers",
+  "testers": [
+    {
+      "personaId": "first-time",
+      "name": "Maya, the first-time user",
+      "status": "completed",
+      "resultUrl": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/first-time/trialroom-first-time.json"
+    },
+    {
+      "personaId": "impatient",
+      "name": "Leo, the impatient user",
+      "status": "completed",
+      "resultUrl": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/impatient/trialroom-impatient.json"
+    },
+    {
+      "personaId": "keyboard",
+      "name": "Noor, the keyboard user",
+      "status": "completed",
+      "resultUrl": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/keyboard/trialroom-keyboard.json"
+    },
+    {
+      "personaId": "edge-case",
+      "name": "Eli, the edge-case user",
+      "status": "completed",
+      "resultUrl": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/edge-case/trialroom-edge-case.json"
+    }
+  ],
+  "artifacts": [
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/first-time/01-login.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/first-time/02-catalog.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/first-time/03-add-backpack.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/first-time/04-cart.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/first-time/05-checkout.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/first-time/trialroom-first-time.json",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/impatient/01-login.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/impatient/02-catalog.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/impatient/03-add-backpack.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/impatient/04-cart.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/impatient/05-checkout.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/impatient/trialroom-impatient.json",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/keyboard/01-login.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/keyboard/02-catalog-add.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/keyboard/03-cart.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/keyboard/04-checkout-details.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/keyboard/05-review-stop.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/keyboard/trialroom-keyboard.json",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/edge-case/01-login.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/edge-case/02-catalog-add.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/edge-case/03-cart.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/edge-case/04-empty-validation.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/edge-case/05-review-stop.jpg",
+    "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/edge-case/trialroom-edge-case.json"
+  ]
+}

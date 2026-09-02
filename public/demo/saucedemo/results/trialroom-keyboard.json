@@ -1,0 +1,174 @@
+{
+  "runId": "seeded-saucedemo-showcase",
+  "personaId": "keyboard",
+  "targetUrl": "https://www.saucedemo.com/",
+  "status": "completed",
+  "steps": [
+    {
+      "id": "login",
+      "title": "Enter with the keyboard",
+      "mission": "Complete login using keyboard controls",
+      "outcome": "pass",
+      "durationMs": 1650,
+      "observationCount": 1,
+      "screenshot": {
+        "id": "keyboard-login",
+        "label": "Noor · Enter with the keyboard",
+        "source": "demo-placeholder",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/keyboard/01-login.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "catalog",
+      "title": "Add the backpack",
+      "mission": "Reach and activate the product action",
+      "outcome": "pass",
+      "durationMs": 690,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "keyboard-catalog",
+        "label": "Noor · Add the backpack",
+        "source": "demo-placeholder",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/keyboard/02-catalog-add.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "cart",
+      "title": "Reach the cart",
+      "mission": "Navigate to the cart without a pointer",
+      "outcome": "friction",
+      "durationMs": 1220,
+      "observationCount": 1,
+      "screenshot": {
+        "id": "keyboard-cart",
+        "label": "Noor · Reach the cart",
+        "source": "demo-placeholder",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/keyboard/03-cart.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "checkout",
+      "title": "Enter checkout details",
+      "mission": "Complete customer fields with the keyboard",
+      "outcome": "pass",
+      "durationMs": 480,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "keyboard-checkout",
+        "label": "Noor · Enter checkout details",
+        "source": "demo-placeholder",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/keyboard/04-checkout-details.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "review",
+      "title": "Review and stop",
+      "mission": "Confirm the review screen without submitting",
+      "outcome": "pass",
+      "durationMs": 310,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "keyboard-review",
+        "label": "Noor · Review and stop",
+        "source": "demo-placeholder",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/keyboard/05-review-stop.jpg",
+        "width": 960,
+        "height": 540
+      }
+    }
+  ],
+  "findings": [
+    {
+      "id": "keyboard-cart-unreachable",
+      "testerId": "keyboard",
+      "route": "/inventory.html",
+      "stepId": "cart",
+      "category": "accessibility",
+      "severity": "high",
+      "observation": {
+        "summary": "The cart link is skipped by keyboard navigation",
+        "expected": "The cart should be reachable in the natural Tab order after adding a product.",
+        "actual": "Forty Tab presses completed a focus cycle without reaching the cart link; the element was an anchor with no href, so a pointer fallback was required to continue."
+      },
+      "evidence": [
+        {
+          "pageUrl": "https://www.saucedemo.com/inventory.html",
+          "attemptedAction": "Tabbed repeatedly after adding the backpack and tracked the focused element.",
+          "screenshot": {
+            "id": "keyboard-cart",
+            "label": "Noor · Reach the cart",
+            "source": "demo-placeholder",
+            "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/keyboard/03-cart.jpg",
+            "width": 960,
+            "height": 540
+          },
+          "consoleErrors": [],
+          "failedRequests": [],
+          "elapsedMs": 1220
+        }
+      ],
+      "reproduction": [
+        "Log in using the keyboard",
+        "Activate Add to cart",
+        "Press Tab through one full focus cycle and watch for the cart link"
+      ]
+    },
+    {
+      "id": "keyboard-telemetry-401",
+      "testerId": "keyboard",
+      "route": "/",
+      "stepId": "login",
+      "category": "reliability",
+      "severity": "low",
+      "observation": {
+        "summary": "Background telemetry requests fail during page load",
+        "expected": "Background product telemetry should complete without browser-visible network failures.",
+        "actual": "Two Backtrace telemetry POST requests returned HTTP 401; the core shopping journey still completed."
+      },
+      "evidence": [
+        {
+          "pageUrl": "https://www.saucedemo.com/",
+          "attemptedAction": "Opened SauceDemo in a fresh browser context.",
+          "screenshot": {
+            "id": "keyboard-login",
+            "label": "Noor · Enter with the keyboard",
+            "source": "demo-placeholder",
+            "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/keyboard/01-login.jpg",
+            "width": 960,
+            "height": 540
+          },
+          "consoleErrors": [
+            "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+            "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+          ],
+          "failedRequests": [
+            {
+              "url": "https://events.backtrace.io/api/summed-events/submit?universe=UNIVERSE&token=TOKEN",
+              "status": 401,
+              "method": "POST"
+            },
+            {
+              "url": "https://events.backtrace.io/api/unique-events/submit?universe=UNIVERSE&token=TOKEN",
+              "status": 401,
+              "method": "POST"
+            }
+          ],
+          "elapsedMs": 1650
+        }
+      ],
+      "reproduction": [
+        "Open SauceDemo in a fresh browser context",
+        "Observe failed network responses during page load",
+        "Continue through the core flow to verify it remains usable"
+      ]
+    }
+  ]
+}

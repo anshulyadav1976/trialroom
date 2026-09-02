@@ -1,0 +1,131 @@
+{
+  "runId": "seeded-saucedemo-edge-case-explorer",
+  "personaId": "edge-case",
+  "personaName": "Edge-Case Explorer",
+  "targetUrl": "https://www.saucedemo.com/",
+  "status": "completed",
+  "stoppedBeforeOrderSubmission": true,
+  "steps": [
+    {
+      "id": "login",
+      "title": "Log in",
+      "outcome": "pass",
+      "observation": "Valid public test credentials opened a catalog of 6 products.",
+      "screenshot": {
+        "id": "edge-case-explorer-01-login",
+        "label": "Edge-case explorer \u00b7 login",
+        "source": "demo-placeholder",
+        "publicPath": "/demo/saucedemo/edge-case-explorer/01-login.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "catalog",
+      "title": "Inspect catalog and add Backpack",
+      "outcome": "pass",
+      "observation": "Adding one Backpack produced a cart badge of 1 without duplicating the item.",
+      "screenshot": {
+        "id": "edge-case-explorer-02-catalog-add",
+        "label": "Edge-case explorer \u00b7 catalog",
+        "source": "demo-placeholder",
+        "publicPath": "/demo/saucedemo/edge-case-explorer/02-catalog-add.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "cart",
+      "title": "Inspect cart",
+      "outcome": "pass",
+      "observation": "The cart contained 1 item and preserved the Backpack selection.",
+      "screenshot": {
+        "id": "edge-case-explorer-03-cart",
+        "label": "Edge-case explorer \u00b7 cart",
+        "source": "demo-placeholder",
+        "publicPath": "/demo/saucedemo/edge-case-explorer/03-cart.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "validation",
+      "title": "Probe empty checkout validation",
+      "outcome": "pass",
+      "observation": "Empty submission was blocked with \u201cError: First Name is required\u201d and 3 visible error icons.",
+      "screenshot": {
+        "id": "edge-case-explorer-04-empty-validation",
+        "label": "Edge-case explorer \u00b7 empty validation",
+        "source": "demo-placeholder",
+        "publicPath": "/demo/saucedemo/edge-case-explorer/04-empty-validation.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "long-values-review",
+      "title": "Try long valid values and stop",
+      "outcome": "pass",
+      "observation": "Lengths {'firstName': 80, 'lastName': 80, 'postalCode': 20} were accepted and reached review with Total: $32.39; Finish was not clicked.",
+      "screenshot": {
+        "id": "edge-case-explorer-05-review-stop",
+        "label": "Edge-case explorer \u00b7 review, stopped before order",
+        "source": "demo-placeholder",
+        "publicPath": "/demo/saucedemo/edge-case-explorer/05-review-stop.jpg",
+        "width": 960,
+        "height": 540
+      }
+    }
+  ],
+  "findings": [
+    {
+      "id": "checkout-empty-validation-summary",
+      "severity": "low",
+      "category": "validation",
+      "stepId": "validation",
+      "summary": "Empty checkout marks every field but names only the first missing value.",
+      "observation": "All 3 fields displayed error icons while the single banner said \u201cError: First Name is required\u201d.",
+      "expected": "Validation feedback should make each marked field's issue explicit.",
+      "reproduction": [
+        "Add Backpack and open Checkout",
+        "Leave all three fields empty",
+        "Select Continue"
+      ],
+      "evidence": {
+        "errorText": "Error: First Name is required",
+        "errorIconCount": 3
+      }
+    }
+  ],
+  "evidence": {
+    "finalUrl": "https://www.saucedemo.com/checkout-step-two.html",
+    "elapsedMs": 1691,
+    "consoleErrors": [
+      "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+      "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+    ],
+    "networkFailures": [
+      {
+        "kind": "http",
+        "url": "https://events.backtrace.io/api/unique-events/submit?universe=UNIVERSE&token=TOKEN",
+        "status": 401,
+        "method": "POST"
+      },
+      {
+        "kind": "http",
+        "url": "https://events.backtrace.io/api/summed-events/submit?universe=UNIVERSE&token=TOKEN",
+        "status": 401,
+        "method": "POST"
+      }
+    ],
+    "emptyValidation": {
+      "message": "Error: First Name is required",
+      "iconCount": 3
+    },
+    "longValueLengths": {
+      "firstName": 80,
+      "lastName": 80,
+      "postalCode": 20
+    }
+  }
+}

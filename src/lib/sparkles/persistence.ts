@@ -86,6 +86,7 @@ export function snapshotRun(run: LiveRun): StoredRun {
   return {
     id: run.id,
     mode: "live",
+    seeded: run.seeded,
     targetName: run.targetName,
     targetUrl: safeTargetUrl(run.targetUrl),
     startedAt: run.startedAt,
@@ -182,6 +183,7 @@ export async function getLiveRun(runId: string) {
   const run: LiveRun = {
     id: stored.id,
     mode: "live",
+    seeded: stored.seeded,
     targetName: stored.targetName,
     targetUrl: stored.targetUrl,
     repository: stored.repository,

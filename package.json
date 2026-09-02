@@ -9,7 +9,8 @@
     "lint": "eslint",
     "test:results": "node --test src/lib/results.test.mjs",
     "test:spike": "node --test scripts/sparkles-spike.test.mjs",
-    "spike:sparkles": "node scripts/sparkles-spike.mjs"
+    "spike:sparkles": "node scripts/sparkles-spike.mjs",
+    "seed:saucedemo": "node scripts/seed-saucedemo.mjs"
   },
   "dependencies": {
     "@vercel/blob": "^2.8.0",

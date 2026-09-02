@@ -19,6 +19,7 @@ export interface LiveTester extends TesterRun {
 export interface LiveRun {
   id: string;
   mode: "live";
+  seeded?: boolean;
   targetName: string;
   targetUrl: string;
   repository?: string;

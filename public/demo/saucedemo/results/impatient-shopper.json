@@ -1,0 +1,185 @@
+{
+  "runId": "seeded-saucedemo-impatient-shopper",
+  "mode": "seeded-evidence",
+  "targetUrl": "https://www.saucedemo.com/",
+  "persona": {
+    "id": "impatient-shopper",
+    "name": "Impatient Shopper"
+  },
+  "status": "completed",
+  "orderSubmitted": false,
+  "viewport": {
+    "width": 960,
+    "height": 540
+  },
+  "startedAt": "2026-09-02T19:09:57.857977Z",
+  "completedAt": "2026-09-02T19:09:59.575676Z",
+  "steps": [
+    {
+      "id": "login",
+      "title": "Enter public test credentials",
+      "outcome": "pass",
+      "elapsedMs": 1527,
+      "url": "https://www.saucedemo.com/",
+      "screenshot": "/demo/saucedemo/impatient-shopper/01-login.jpg",
+      "observation": "The login form accepted the published SauceDemo standard-user credentials; the password remained masked."
+    },
+    {
+      "id": "catalog",
+      "title": "Inspect the product catalog",
+      "outcome": "pass",
+      "elapsedMs": 29,
+      "url": "https://www.saucedemo.com/inventory.html",
+      "screenshot": "/demo/saucedemo/impatient-shopper/02-catalog.jpg",
+      "observation": "The catalog loaded 6 products and included Sauce Labs Backpack with the default az sort."
+    },
+    {
+      "id": "add-backpack",
+      "title": "Add Sauce Labs Backpack",
+      "outcome": "friction",
+      "elapsedMs": 47,
+      "url": "https://www.saucedemo.com/inventory.html",
+      "screenshot": "/demo/saucedemo/impatient-shopper/03-add-backpack.jpg",
+      "observation": "Two immediate presses on the product action added and then removed the Backpack; the cart badge returned to empty."
+    },
+    {
+      "id": "cart",
+      "title": "Inspect the cart",
+      "outcome": "pass",
+      "elapsedMs": 36,
+      "url": "https://www.saucedemo.com/cart.html",
+      "screenshot": "/demo/saucedemo/impatient-shopper/04-cart.jpg",
+      "observation": "The cart showed one Sauce Labs Backpack with quantity 1. The item was safely re-added after the rapid repeated action."
+    },
+    {
+      "id": "checkout",
+      "title": "Begin checkout and stop safely",
+      "outcome": "pass",
+      "elapsedMs": 32,
+      "url": "https://www.saucedemo.com/checkout-step-one.html",
+      "screenshot": "/demo/saucedemo/impatient-shopper/05-checkout.jpg",
+      "observation": "Checkout opened the customer-information form. No Finish button was present, and the run stopped without submitting an order."
+    }
+  ],
+  "evidence": {
+    "consoleErrors": [
+      "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+      "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+    ],
+    "failedRequests": [
+      {
+        "url": "https://events.backtrace.io/api/summed-events/submit?universe=UNIVERSE&token=TOKEN",
+        "status": 401
+      },
+      {
+        "url": "https://events.backtrace.io/api/unique-events/submit?universe=UNIVERSE&token=TOKEN",
+        "status": 401
+      }
+    ],
+    "telemetry": {
+      "loginFieldSemantics": {
+        "username": {
+          "labelCount": 0,
+          "ariaLabel": null,
+          "ariaLabelledBy": null,
+          "placeholder": "Username"
+        },
+        "password": {
+          "labelCount": 0,
+          "ariaLabel": null,
+          "ariaLabelledBy": null,
+          "placeholder": "Password"
+        }
+      },
+      "catalog": {
+        "itemCount": 6,
+        "containsBackpack": true,
+        "sortValue": "az"
+      },
+      "addAction": {
+        "badgeAfterFirstPress": "1",
+        "buttonAfterFirstPress": "Remove",
+        "badgeCountAfterImmediateSecondPress": 0,
+        "buttonAfterImmediateSecondPress": "Add to cart"
+      },
+      "recoveredFromRepeatedAction": true,
+      "cart": {
+        "itemCount": 1,
+        "quantity": "1"
+      },
+      "checkout": {
+        "fieldSemantics": [
+          {
+            "labelCount": 0,
+            "ariaLabel": null,
+            "ariaLabelledBy": null,
+            "placeholder": "First Name"
+          },
+          {
+            "labelCount": 0,
+            "ariaLabel": null,
+            "ariaLabelledBy": null,
+            "placeholder": "Last Name"
+          },
+          {
+            "labelCount": 0,
+            "ariaLabel": null,
+            "ariaLabelledBy": null,
+            "placeholder": "Zip/Postal Code"
+          }
+        ],
+        "finishButtonVisible": false,
+        "url": "https://www.saucedemo.com/checkout-step-one.html"
+      }
+    }
+  },
+  "findings": [
+    {
+      "id": "rapid-repeat-reverses-cart-add",
+      "stepId": "add-backpack",
+      "category": "interaction",
+      "severity": "medium",
+      "observation": "A second immediate press in the same product-action position reversed the add and emptied the cart.",
+      "expected": "A rapid repeated action does not silently undo the shopper's intended add.",
+      "actual": "The first press changed Add to cart to Remove; the immediate second press removed the item and badge.",
+      "technicalEvidence": {
+        "badgeAfterFirstPress": "1",
+        "buttonAfterFirstPress": "Remove",
+        "badgeCountAfterImmediateSecondPress": 0,
+        "buttonAfterImmediateSecondPress": "Add to cart"
+      },
+      "reproduction": [
+        "Log in as standard_user.",
+        "Press Add to cart for Sauce Labs Backpack.",
+        "Immediately press the replacement Remove action in the same position.",
+        "Observe that the cart badge disappears."
+      ],
+      "screenshot": "/demo/saucedemo/impatient-shopper/03-add-backpack.jpg"
+    },
+    {
+      "id": "telemetry-requests-return-401",
+      "stepId": "login",
+      "category": "reliability",
+      "severity": "low",
+      "observation": "Two Backtrace telemetry submissions returned HTTP 401 and produced browser console errors; the shopping journey still completed.",
+      "expected": "Background telemetry requests complete without authorization errors or console noise.",
+      "actual": "The summed-events and unique-events submission endpoints each returned HTTP 401.",
+      "technicalEvidence": [
+        {
+          "url": "https://events.backtrace.io/api/summed-events/submit?universe=UNIVERSE&token=TOKEN",
+          "status": 401
+        },
+        {
+          "url": "https://events.backtrace.io/api/unique-events/submit?universe=UNIVERSE&token=TOKEN",
+          "status": 401
+        }
+      ],
+      "reproduction": [
+        "Open SauceDemo in a fresh browser context.",
+        "Watch failed HTTP responses during page load.",
+        "Observe 401 responses from the Backtrace summed-events and unique-events submission endpoints."
+      ],
+      "screenshot": "/demo/saucedemo/impatient-shopper/01-login.jpg"
+    }
+  ]
+}

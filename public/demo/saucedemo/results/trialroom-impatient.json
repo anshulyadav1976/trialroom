@@ -1,0 +1,174 @@
+{
+  "runId": "seeded-saucedemo-showcase",
+  "personaId": "impatient",
+  "targetUrl": "https://www.saucedemo.com/",
+  "status": "completed",
+  "steps": [
+    {
+      "id": "login",
+      "title": "Enter the shop",
+      "mission": "Use the published demo credentials",
+      "outcome": "pass",
+      "durationMs": 1280,
+      "observationCount": 1,
+      "screenshot": {
+        "id": "impatient-login",
+        "label": "Leo · Enter the shop",
+        "source": "demo-placeholder",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/impatient/01-login.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "catalog",
+      "title": "Scan the catalog",
+      "mission": "Find the backpack quickly",
+      "outcome": "pass",
+      "durationMs": 41,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "impatient-catalog",
+        "label": "Leo · Scan the catalog",
+        "source": "demo-placeholder",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/impatient/02-catalog.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "add-to-cart",
+      "title": "Add the backpack",
+      "mission": "Act quickly, then verify the cart state",
+      "outcome": "friction",
+      "durationMs": 74,
+      "observationCount": 1,
+      "screenshot": {
+        "id": "impatient-add-to-cart",
+        "label": "Leo · Add the backpack",
+        "source": "demo-placeholder",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/impatient/03-add-backpack.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "cart",
+      "title": "Review the cart",
+      "mission": "Confirm the recovered item and quantity",
+      "outcome": "pass",
+      "durationMs": 28,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "impatient-cart",
+        "label": "Leo · Review the cart",
+        "source": "demo-placeholder",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/impatient/04-cart.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "checkout",
+      "title": "Begin checkout",
+      "mission": "Reach customer details and stop safely",
+      "outcome": "pass",
+      "durationMs": 31,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "impatient-checkout",
+        "label": "Leo · Begin checkout",
+        "source": "demo-placeholder",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/impatient/05-checkout.jpg",
+        "width": 960,
+        "height": 540
+      }
+    }
+  ],
+  "findings": [
+    {
+      "id": "impatient-repeat-reverses-cart",
+      "testerId": "impatient",
+      "route": "/inventory.html",
+      "stepId": "add-to-cart",
+      "category": "interaction",
+      "severity": "medium",
+      "observation": {
+        "summary": "A repeated product action immediately reverses the cart state",
+        "expected": "A fast repeated action should not silently undo a just-confirmed add, or should make that reversal unmistakable.",
+        "actual": "The first press showed a cart badge of 1 and changed the button to Remove; the second immediate press returned the badge to 0 and the button to Add to cart."
+      },
+      "evidence": [
+        {
+          "pageUrl": "https://www.saucedemo.com/inventory.html",
+          "attemptedAction": "Pressed the product action twice rapidly in the same location, then recovered by adding once.",
+          "screenshot": {
+            "id": "impatient-add-to-cart",
+            "label": "Leo · Add the backpack",
+            "source": "demo-placeholder",
+            "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/impatient/03-add-backpack.jpg",
+            "width": 960,
+            "height": 540
+          },
+          "consoleErrors": [],
+          "failedRequests": [],
+          "elapsedMs": 74
+        }
+      ],
+      "reproduction": [
+        "Open the catalog",
+        "Press Add to cart on Sauce Labs Backpack",
+        "Immediately press the same-position Remove action"
+      ]
+    },
+    {
+      "id": "impatient-telemetry-401",
+      "testerId": "impatient",
+      "route": "/",
+      "stepId": "login",
+      "category": "reliability",
+      "severity": "low",
+      "observation": {
+        "summary": "Background telemetry requests fail during page load",
+        "expected": "Background product telemetry should complete without browser-visible network failures.",
+        "actual": "Two Backtrace telemetry POST requests returned HTTP 401; the core shopping journey still completed."
+      },
+      "evidence": [
+        {
+          "pageUrl": "https://www.saucedemo.com/",
+          "attemptedAction": "Opened SauceDemo in a fresh browser context.",
+          "screenshot": {
+            "id": "impatient-login",
+            "label": "Leo · Enter the shop",
+            "source": "demo-placeholder",
+            "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/impatient/01-login.jpg",
+            "width": 960,
+            "height": 540
+          },
+          "consoleErrors": [
+            "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+            "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+          ],
+          "failedRequests": [
+            {
+              "url": "https://events.backtrace.io/api/summed-events/submit?universe=UNIVERSE&token=TOKEN",
+              "status": 401,
+              "method": "POST"
+            },
+            {
+              "url": "https://events.backtrace.io/api/unique-events/submit?universe=UNIVERSE&token=TOKEN",
+              "status": 401,
+              "method": "POST"
+            }
+          ],
+          "elapsedMs": 1280
+        }
+      ],
+      "reproduction": [
+        "Open SauceDemo in a fresh browser context",
+        "Observe failed network responses during page load",
+        "Continue through the core flow to verify it remains usable"
+      ]
+    }
+  ]
+}

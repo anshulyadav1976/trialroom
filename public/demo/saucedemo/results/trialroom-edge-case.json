@@ -1,0 +1,174 @@
+{
+  "runId": "seeded-saucedemo-showcase",
+  "personaId": "edge-case",
+  "targetUrl": "https://www.saucedemo.com/",
+  "status": "completed",
+  "steps": [
+    {
+      "id": "login",
+      "title": "Enter the shop",
+      "mission": "Use the published demo credentials",
+      "outcome": "pass",
+      "durationMs": 1420,
+      "observationCount": 1,
+      "screenshot": {
+        "id": "edge-case-login",
+        "label": "Eli · Enter the shop",
+        "source": "demo-placeholder",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/edge-case/01-login.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "catalog",
+      "title": "Add the backpack",
+      "mission": "Add one representative product",
+      "outcome": "pass",
+      "durationMs": 56,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "edge-case-catalog",
+        "label": "Eli · Add the backpack",
+        "source": "demo-placeholder",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/edge-case/02-catalog-add.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "cart",
+      "title": "Review the cart",
+      "mission": "Confirm the item and enter checkout",
+      "outcome": "pass",
+      "durationMs": 42,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "edge-case-cart",
+        "label": "Eli · Review the cart",
+        "source": "demo-placeholder",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/edge-case/03-cart.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "checkout",
+      "title": "Probe validation",
+      "mission": "Submit empty customer details once",
+      "outcome": "friction",
+      "durationMs": 94,
+      "observationCount": 1,
+      "screenshot": {
+        "id": "edge-case-checkout",
+        "label": "Eli · Probe validation",
+        "source": "demo-placeholder",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/edge-case/04-empty-validation.jpg",
+        "width": 960,
+        "height": 540
+      }
+    },
+    {
+      "id": "review",
+      "title": "Try long values and stop",
+      "mission": "Verify accepted data without submitting an order",
+      "outcome": "pass",
+      "durationMs": 390,
+      "observationCount": 0,
+      "screenshot": {
+        "id": "edge-case-review",
+        "label": "Eli · Try long values and stop",
+        "source": "demo-placeholder",
+        "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/edge-case/05-review-stop.jpg",
+        "width": 960,
+        "height": 540
+      }
+    }
+  ],
+  "findings": [
+    {
+      "id": "edge-checkout-validation-summary",
+      "testerId": "edge-case",
+      "route": "/checkout-step-one.html",
+      "stepId": "checkout",
+      "category": "validation",
+      "severity": "low",
+      "observation": {
+        "summary": "Empty checkout highlights every field but names only the first error",
+        "expected": "Validation feedback should make every invalid field and the next recovery action clear.",
+        "actual": "All three fields displayed error icons while the single banner named only First Name as required."
+      },
+      "evidence": [
+        {
+          "pageUrl": "https://www.saucedemo.com/checkout-step-one.html",
+          "attemptedAction": "Continued with all three customer-detail fields empty, then inspected the error state.",
+          "screenshot": {
+            "id": "edge-case-checkout",
+            "label": "Eli · Probe validation",
+            "source": "demo-placeholder",
+            "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/edge-case/04-empty-validation.jpg",
+            "width": 960,
+            "height": 540
+          },
+          "consoleErrors": [],
+          "failedRequests": [],
+          "elapsedMs": 94
+        }
+      ],
+      "reproduction": [
+        "Reach checkout customer information",
+        "Leave all fields empty",
+        "Press Continue and compare the three field states with the banner"
+      ]
+    },
+    {
+      "id": "edge-case-telemetry-401",
+      "testerId": "edge-case",
+      "route": "/",
+      "stepId": "login",
+      "category": "reliability",
+      "severity": "low",
+      "observation": {
+        "summary": "Background telemetry requests fail during page load",
+        "expected": "Background product telemetry should complete without browser-visible network failures.",
+        "actual": "Two Backtrace telemetry POST requests returned HTTP 401; the core shopping journey still completed."
+      },
+      "evidence": [
+        {
+          "pageUrl": "https://www.saucedemo.com/",
+          "attemptedAction": "Opened SauceDemo in a fresh browser context.",
+          "screenshot": {
+            "id": "edge-case-login",
+            "label": "Eli · Enter the shop",
+            "source": "demo-placeholder",
+            "url": "https://50zf1uixmxzzixdb.public.blob.vercel-storage.com/runs/seeded-saucedemo-showcase/edge-case/01-login.jpg",
+            "width": 960,
+            "height": 540
+          },
+          "consoleErrors": [
+            "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+            "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+          ],
+          "failedRequests": [
+            {
+              "url": "https://events.backtrace.io/api/summed-events/submit?universe=UNIVERSE&token=TOKEN",
+              "status": 401,
+              "method": "POST"
+            },
+            {
+              "url": "https://events.backtrace.io/api/unique-events/submit?universe=UNIVERSE&token=TOKEN",
+              "status": 401,
+              "method": "POST"
+            }
+          ],
+          "elapsedMs": 1420
+        }
+      ],
+      "reproduction": [
+        "Open SauceDemo in a fresh browser context",
+        "Observe failed network responses during page load",
+        "Continue through the core flow to verify it remains usable"
+      ]
+    }
+  ]
+}
