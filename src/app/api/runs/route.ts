@@ -1,4 +1,4 @@
-import { createSandbox, getSandbox } from "@/lib/sparkles/client";
+import { createSandbox, getSandbox, listSandboxes } from "@/lib/sparkles/client";
 import { createArtifactGrant } from "@/lib/sparkles/artifacts";
 import { acquireStudyLock, durableRunsEnabled, listPublicRuns, persistAndUnlockIfSettled, persistRun, readStoredRun, releaseStudyLock } from "@/lib/sparkles/persistence";
 import { mapSandboxStatus } from "@/lib/sparkles/events";
@@ -21,7 +21,14 @@ function validTarget(value: unknown) {
 }
 
 async function staleRunSettled(runId: string) {
-  if (runId.startsWith("fix_")) return true;
+  if (runId.startsWith("fix_")) {
+    try {
+      const sandboxes = await listSandboxes();
+      return !sandboxes.some((sandbox) => sandbox.metadata?.fixId === runId && sandbox.status !== "terminated" && sandbox.status !== "failed");
+    } catch {
+      return false;
+    }
+  }
   const stored = await readStoredRun(runId);
   if (!stored) return false;
   const active = stored.testers.filter((tester) => tester.sandboxActive);

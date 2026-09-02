@@ -260,7 +260,8 @@ export async function acquireStudyLock(
     const stored = await readStoredRun(existing.value.runId);
     const settled = Boolean(stored && stored.testers.every((tester) => !tester.sandboxActive));
     const expired = Date.parse(existing.value.expiresAt) <= now;
-    if (!settled && (!expired || !(await canRecoverStale(existing.value.runId)))) return false;
+    const recoverable = settled || ((expired || existing.value.runId.startsWith("fix_")) && await canRecoverStale(existing.value.runId));
+    if (!recoverable) return false;
     try {
       await put(LOCK_PATH, body, {
         access: "public",

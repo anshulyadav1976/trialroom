@@ -9,6 +9,7 @@ export interface CreateSandboxInput {
   idempotencyKey: string;
   metadata: Record<string, string>;
   model?: string;
+  signal?: AbortSignal;
 }
 
 function apiKey() {
@@ -36,6 +37,7 @@ async function request(pathname: string, init: RequestInit = {}) {
 export async function createSandbox(input: CreateSandboxInput) {
   const response = await request("/sandboxes", {
     method: "POST",
+    signal: input.signal,
     headers: {
       "Content-Type": "application/json",
       "Idempotency-Key": input.idempotencyKey,

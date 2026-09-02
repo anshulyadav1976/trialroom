@@ -52,6 +52,7 @@ export async function POST(request: Request) {
       idempotencyKey: `trialroom-fix-${digest}`,
       metadata: { product: "trialroom", kind: "fix", fixId: lockId, findingId: input.finding.id },
       model: process.env.SPARKLES_MODEL,
+      signal: AbortSignal.timeout(45_000),
     });
     // ponytail: the demo holds this one-room lease until its 45-minute stale window; add fix status/termination only when the UI needs it.
     return Response.json({ sandboxId: sandbox.id, status: sandbox.status ?? "queued" }, { status: 201 });
