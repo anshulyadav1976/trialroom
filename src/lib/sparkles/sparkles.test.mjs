@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { normalizeSparklesEvent, parseSseBlock, sparklesEventKey } from "./events.ts";
+import { fixDigest, fixPrompt, parseFixRequest } from "./fix.ts";
 import { MAX_ACTIVE_SANDBOXES, RunRegistry, SandboxSlots, makeTester } from "./registry.ts";
 import { journey, personas } from "./study.ts";
 
@@ -68,4 +69,26 @@ test("tester completion does not release a sandbox slot before sandbox settlemen
   local.updateStatus(run, tester, "partial", true);
   assert.equal(local.slots.active, 0);
   assert.equal(tester.status, "completed");
+});
+
+test("fix request validation stays bounded and idempotent", () => {
+  const value = {
+    repository: "acme/storefront",
+    targetUrl: "https://example.test/cart",
+    finding: {
+      id: "finding-1",
+      title: "Cart feedback is unclear",
+      severity: "medium",
+      category: "feedback",
+      observation: { summary: "No confirmation", expected: "Confirm the add", actual: "No message appeared" },
+      reproduction: ["Open the cart", "Add one item"],
+    },
+  };
+  const parsed = parseFixRequest(value);
+  const reparsed = parseFixRequest(JSON.parse(JSON.stringify(value)));
+  assert.ok(parsed);
+  assert.ok(reparsed);
+  assert.equal(fixDigest(parsed), fixDigest(reparsed));
+  assert.match(fixPrompt(parsed), /Do not push, open a pull request, deploy/);
+  assert.equal(parseFixRequest({ ...value, finding: { ...value.finding, title: "x".repeat(201) } }), null);
 });

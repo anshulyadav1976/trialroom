@@ -21,6 +21,7 @@ function validTarget(value: unknown) {
 }
 
 async function staleRunSettled(runId: string) {
+  if (runId.startsWith("fix_")) return true;
   const stored = await readStoredRun(runId);
   if (!stored) return false;
   const active = stored.testers.filter((tester) => tester.sandboxActive);
